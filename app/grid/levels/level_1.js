@@ -14,7 +14,7 @@ for (let i = 0; i < data.width; i++) {
 
 for (let i = 0; i < 4; i++) {
   for (let j = 0; j < data.width; j++) {
-    data.grid[i][Math.floor(Math.random()*data.height)] = 1;
+    data.grid[j][Math.floor(Math.random()*data.height)] = 1;
   }
 }
 
@@ -22,10 +22,11 @@ for (let i = 0; i < 4; i++) {
 const entrancePoint = generateRandomPointAlongWall();
 const exitPoint = generateRandomPointAlongWall();
 
-console.log(entrancePoint, exitPoint, data.grid);
-
 data.grid[entrancePoint.x][entrancePoint.y] = 2;
 data.grid[exitPoint.x][exitPoint.y] = 3;
+
+data.entrancePoint = entrancePoint;
+data.exitPoint = exitPoint;
 
 function flipCoin () {
   return Math.round(Math.random()*1);

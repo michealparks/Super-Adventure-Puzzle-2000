@@ -18,7 +18,7 @@ class Bip extends SquareBeing {
   static addBip (bip) {
     this.bips = this.bips || [];
     this.bips.push(bip);
-    this.curBip = this.bips.length-1;
+    this.curBip = bip;
   }
 
   static removeBip (coord) {
@@ -27,6 +27,14 @@ class Bip extends SquareBeing {
       if (this.bips[i].x === coord.x && this.bips[i].y === coord.y) {
         this.bips.splice(i, 1);
       }
+    }
+  }
+
+  static renderAll () {
+    let i = this.bips.length;
+
+    while (i-- > 0) {
+      this.bips[i].render();
     }
   }
 

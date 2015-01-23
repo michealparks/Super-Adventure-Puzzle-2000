@@ -1,26 +1,29 @@
 import {renderGrid} from 'grid/controller';
-import {renderBip} from 'bip/controller';
-import {renderEnemies} from 'enemies/controller';
-import {curLevel} from 'config/model';
+import {Bip} from 'bip/model';
+import {Enemy} from 'enemy/model';
+import {status} from 'config/model';
+import {levels} from 'grid/model';
 
 var frameId;
 var level;
 
 function renderLoopFrame (stamp) {
   renderGrid(level);
-  renderBip();
-  renderEnemies();
+
+  Bip.renderAll();
+  //Enemy.renderAll();
 
   window.requestAnimationFrame(renderLoopFrame);
 }
 
 function toggleRenderLoop (toResume) {
   if (toResume) {
-    level = curLevel();
+    level = levels.current();
     frameId = window.requestAnimationFrame(renderLoopFrame);
   } else {
     window.cancelAnimationFrame(renderLoopFrame);
   }
 }
+
 
 export {toggleRenderLoop};

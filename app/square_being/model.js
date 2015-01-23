@@ -1,8 +1,9 @@
+import {ctx} from 'canvas/controller';
 import {levels} from 'grid/model';
-import {configs, status} from 'config/model';
+import {configs} from 'config/model';
 
 const tileSize = configs.tileSize;
-const curLevel = status.curLevel;
+const curLevel = levels.current;
 
 class SquareBeing {
   constructor (x, y) {
@@ -20,16 +21,18 @@ class SquareBeing {
     this.dy = y;
   }
 
-  movementFrame () {
-    if (this.detectWallCollision()) return;
-
-    this.x += (this.velocity*this.dx);
-    this.y += (this.velocity*this.dy);
-    this.moveId = window.setTimeout(this.movementFrame, 1000/60);
-  }
-
   makeMovement () {
-    this.moveId = window.setTimeout(this.movementFrame, 1000/60);
+    let that = this;
+
+    function movementFrame () {
+      if (that.detectWallCollision()) return;
+
+      that.x += (that.velocity*that.dx);
+      that.y += (that.velocity*that.dy);
+      that.moveId = window.setTimeout(movementFrame, 1000/60);
+    }
+
+    this.moveId = window.setTimeout(movementFrame, 1000/60);
   }
 
   stopMovement () {

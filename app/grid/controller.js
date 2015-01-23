@@ -1,11 +1,19 @@
 import {levels} from 'grid/model';
 import {ctx} from 'canvas/controller';
-import {tileSize} from 'config/model';
+import {configs} from 'config/model';
+
+const tileSize = configs.tileSize;
 
 function renderTile (x, y, tileType) {
   switch (tileType) {
     case 1:
       ctx.fillStyle = '#555555';
+      break;
+    case 2:
+      ctx.fillStyle = '#111111';
+      break;
+    case 3:
+      ctx.fillStyle = '#222222';
       break;
     default:
       ctx.fillStyle = '#333333';

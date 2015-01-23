@@ -6,16 +6,10 @@ const configs = {
 
 var status = {
   level: -1,
-  bip: 0,
 
   curLevel (newLevel) {
-    if (newLevel) level = newLevel;
-    return level;
-  },
-
-  curBip (newBip) {
-    if (newBip) bip = newBip
-    return bip;
+    if (newLevel) this.level = newLevel;
+    return this.level;
   }
 }
 
