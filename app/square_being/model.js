@@ -1,19 +1,19 @@
 import {ctx} from 'canvas/controller';
-import {levels} from 'grid/model';
+import {levels} from 'level/model';
 import {configs} from 'config/model';
 
 const tileSize = configs.tileSize;
 const curLevel = levels.current;
 
 class SquareBeing {
-  constructor (x, y) {
+  constructor (x, y, v) {
     this.x = x;
     this.y = y;
     this.dx = 0;
     this.dy = 0;
-    this.velocity = 0.5;
+    this.velocity = v || 0.5;
     this.moveId = null;
-    this.fill = '#ffffff';
+    this.isOnPath = false;
   }
 
   setMovement (x, y) {
@@ -25,7 +25,10 @@ class SquareBeing {
     let that = this;
 
     function movementFrame () {
-      if (that.detectWallCollision()) return;
+      if (that.detectWallCollision()) {
+        that.isOnPath = false;
+        return;
+      }
 
       that.x += (that.velocity*that.dx);
       that.y += (that.velocity*that.dy);
@@ -33,34 +36,39 @@ class SquareBeing {
     }
 
     this.moveId = window.setTimeout(movementFrame, 1000/60);
+    this.isOnPath = true;
   }
 
   stopMovement () {
     window.clearTimeout(this.moveId);
+    this.x = this.x | 0;
+    this.y = this.y | 0;
   }
 
   detectWallCollision () {
     const grid = levels[curLevel()].grid;
+    const x = this.x;
+    const y = this.y;
 
-    if (Math.floor(this.x) !== this.x ||
-    Math.floor(this.y) !== this.y) return false;
+    if (Math.floor(x) !== x ||
+    Math.floor(y) !== y) return false;
 
     // right
     if (this.dx > 0) {
-      if (this.x+1 === grid.length) return true;
-      if (grid[this.x+1][this.y] === 1) return true;
+      if (x+1 === grid.length) return true;
+      if (grid[x+1][y] === 1) return true;
       // left
     } else if (this.dx < 0) {
-      if (this.x === 0) return true;
-      if (grid[this.x-1][this.y] === 1) return true;
+      if (x === 0) return true;
+      if (grid[x-1][y] === 1) return true;
       // down
     } else if (this.dy > 0) {
-      if (this.y+1 === grid[this.x].length) return true;
-      if (grid[this.x][this.y+1] === 1) return true;
+      if (y+1 === grid[x].length) return true;
+      if (grid[x][y+1] === 1) return true;
       // up
     } else if (this.dy < 0) {
-      if (this.y === 0) return true;
-      if (grid[this.x][this.y-1] === 1) return true;
+      if (y === 0) return true;
+      if (grid[x][this.y-1] === 1) return true;
     }
 
     return false;

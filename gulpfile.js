@@ -26,6 +26,12 @@ gulp.task('scripts', function () {
     .pipe(gulp.dest('build'));
 });
 
+gulp.task('workers', function () {
+  gulp.src(['workers/**/*.js'])
+    .pipe(to5({loose: 'all'}))
+    .pipe(gulp.dest('build'));
+});
+
 gulp.task('stylus', function () {
   gulp.src(['app/**/*.styl'])
     .pipe(stylus({use: nib(), compress: true}))
@@ -51,7 +57,17 @@ gulp.task('webserver', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch('app/**', ['scripts', 'stylus', 'jade']);
+  gulp.watch(['app/**', 'workers/**'], [
+    'scripts',
+    'workers',
+    'stylus',
+    'jade']);
 });
 
-gulp.task('default', ['scripts', 'stylus', 'jade', 'webserver', 'watch']);
+gulp.task('default', [
+  'scripts',
+  'workers',
+  'stylus',
+  'jade',
+  'webserver',
+  'watch']);

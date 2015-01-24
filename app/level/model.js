@@ -1,4 +1,4 @@
-import {data as level_1} from 'grid/levels/level_1';
+import {data as level_1} from 'level/levels/level_1';
 
 const levels = {
   _current: null,
@@ -8,6 +8,10 @@ const levels = {
   current (newLevel) {
     if (newLevel) levels._current = newLevel;
     return levels._current;
+  },
+
+  getCurrentGrid () {
+    return levels[levels._current];
   }
 };
 

@@ -1,10 +1,9 @@
 import {SquareBeing} from 'square_being/model';
 
 class Bip extends SquareBeing {
-
-  constructor (x, y) {
-    super(x, y);
-
+  constructor (x, y, v) {
+    super(x, y, v);
+    this.fill = '#ffffff'
   }
 
   static getBips () {
@@ -28,6 +27,15 @@ class Bip extends SquareBeing {
         this.bips.splice(i, 1);
       }
     }
+  }
+
+  static getLocations () {
+    let locations = [];
+    let i = this.bips.length;
+    while (i-- > 0) {
+      locations.push({x: this.bips[i].x, y: this.bips[i].y});
+    }
+    return locations;
   }
 
   static renderAll () {
