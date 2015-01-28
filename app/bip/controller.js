@@ -1,4 +1,3 @@
-import {ctx} from 'canvas/controller';
 import {levels} from 'level/model';
 import {hasTouch, ptrdown, ptrmove, ptrup} from 'device/model';
 import {Bip} from 'bip/model';
@@ -48,6 +47,7 @@ function onKeyUp (e) {
 
   bip.stopMovement();
   bip.setMovement((e.keyCode-38)%2, (e.keyCode-39)%2);
+
   bip.makeMovement();
 }
 

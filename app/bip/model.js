@@ -40,7 +40,6 @@ class Bip extends SquareBeing {
 
   static renderAll () {
     let i = this.bips.length;
-
     while (i-- > 0) {
       this.bips[i].render();
     }

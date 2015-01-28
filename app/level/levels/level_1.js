@@ -1,3 +1,4 @@
+import {scaleFactor} from 'canvas/controller';
 import {RandomlyGeneratedTerrain} from 'level/levels/generator';
 
 var data = new RandomlyGeneratedTerrain(

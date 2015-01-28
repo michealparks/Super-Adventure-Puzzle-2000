@@ -1,4 +1,7 @@
+import {scaleFactor} from 'canvas/controller';
 import {data as level_1} from 'level/levels/level_1';
+
+const tileSize = 25*scaleFactor;
 
 const levels = {
   _current: null,
@@ -15,4 +18,4 @@ const levels = {
   }
 };
 
-export {levels};
+export {levels, tileSize};

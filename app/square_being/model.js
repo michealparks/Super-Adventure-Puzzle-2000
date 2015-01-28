@@ -1,9 +1,31 @@
 import {ctx} from 'canvas/controller';
-import {levels} from 'level/model';
-import {configs} from 'config/model';
+import {levels, tileSize} from 'level/model';
 
-const tileSize = configs.tileSize;
-const curLevel = levels.current;
+
+function detectWallCollision (x, y, dx, dy, grid) {
+  if (Math.floor(x) !== x ||
+      Math.floor(y) !== y) return false;
+
+  // right
+  if (dx > 0) {
+    if (x+1 === grid.length) return true;
+    if (grid[x+1][y] === 1) return true;
+    // left
+  } else if (dx < 0) {
+    if (x === 0) return true;
+    if (grid[x-1][y] === 1) return true;
+    // down
+  } else if (dy > 0) {
+    if (y+1 === grid[x].length) return true;
+    if (grid[x][y+1] === 1) return true;
+    // up
+  } else if (dy < 0) {
+    if (y === 0) return true;
+    if (grid[x][y-1] === 1) return true;
+  }
+
+  return false;
+}
 
 class SquareBeing {
   constructor (x, y, v) {
@@ -14,6 +36,7 @@ class SquareBeing {
     this.velocity = v || 0.5;
     this.moveId = null;
     this.isOnPath = false;
+    this.grid = null;
   }
 
   setMovement (x, y) {
@@ -25,50 +48,50 @@ class SquareBeing {
     let that = this;
 
     function movementFrame () {
-      if (that.detectWallCollision()) {
+
+      if (detectWallCollision(that.x, that.y, that.dx, that.dy, that.grid)) { //that.detectWallCollision()) {
         that.isOnPath = false;
         return;
       }
 
       that.x += (that.velocity*that.dx);
       that.y += (that.velocity*that.dy);
+
       that.moveId = window.setTimeout(movementFrame, 1000/60);
     }
 
+    this.grid = levels.getCurrentGrid().grid;
     this.moveId = window.setTimeout(movementFrame, 1000/60);
     this.isOnPath = true;
   }
 
   stopMovement () {
     window.clearTimeout(this.moveId);
-    this.x = this.x | 0;
-    this.y = this.y | 0;
+    this.x = Math.round(this.x);
+    this.y = Math.round(this.y);
   }
 
   detectWallCollision () {
-    const grid = levels[curLevel()].grid;
-    const x = this.x;
-    const y = this.y;
 
-    if (Math.floor(x) !== x ||
-    Math.floor(y) !== y) return false;
+    if (Math.floor(this.x) !== this.x ||
+        Math.floor(this.y) !== this.y) return false;
 
     // right
     if (this.dx > 0) {
-      if (x+1 === grid.length) return true;
-      if (grid[x+1][y] === 1) return true;
+      if (this.x+1 === this.grid.length) return true;
+      if (this.grid[this.x+1][this.y] === 1) return true;
       // left
     } else if (this.dx < 0) {
-      if (x === 0) return true;
-      if (grid[x-1][y] === 1) return true;
+      if (this.x === 0) return true;
+      if (this.grid[this.x-1][this.y] === 1) return true;
       // down
     } else if (this.dy > 0) {
-      if (y+1 === grid[x].length) return true;
-      if (grid[x][y+1] === 1) return true;
+      if (this.y+1 === this.grid[this.x].length) return true;
+      if (this.grid[this.x][this.y+1] === 1) return true;
       // up
     } else if (this.dy < 0) {
-      if (y === 0) return true;
-      if (grid[x][this.y-1] === 1) return true;
+      if (this.y === 0) return true;
+      if (this.grid[this.x][this.y-1] === 1) return true;
     }
 
     return false;

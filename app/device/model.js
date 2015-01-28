@@ -18,9 +18,4 @@ if (navigator.pointerEnabled || navigator.msPointerEnabled) {
   ptrmove = 'mousemove';
 }
 
-export {
-  hasTouch, 
-  ptrdown, 
-  ptrup, 
-  ptrmove
-};
+export {hasTouch, ptrdown, ptrup, ptrmove};

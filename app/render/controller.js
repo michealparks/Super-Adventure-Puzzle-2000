@@ -1,29 +1,28 @@
 import {renderGrid} from 'level/controller';
 import {Bip} from 'bip/model';
 import {Enemy} from 'enemy/model';
-import {status} from 'config/model';
 import {levels} from 'level/model';
 
 var frameId;
 var level;
 
-function renderLoopFrame (stamp) {
+function frame (stamp) {
+
   renderGrid(level);
 
   Bip.renderAll();
   Enemy.renderAll();
 
-  window.requestAnimationFrame(renderLoopFrame);
+  frameId = window.requestAnimationFrame(frame);
 }
 
-function toggleRenderLoop (toResume) {
+function toggleRender (toResume) {
   if (toResume) {
     level = levels.current();
-    frameId = window.requestAnimationFrame(renderLoopFrame);
+    frameId = window.requestAnimationFrame(frame);
   } else {
-    window.cancelAnimationFrame(renderLoopFrame);
+    window.cancelAnimationFrame(frame);
   }
 }
 
-
-export {toggleRenderLoop};
+export {toggleRender};

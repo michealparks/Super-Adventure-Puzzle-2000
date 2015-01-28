@@ -2,28 +2,38 @@ import {SquareBeing} from 'square_being/model';
 import {levels} from 'level/model';
 import {Bip} from 'bip/model';
 
+function getPaths () {
+  return
+}
+
 class Enemy extends SquareBeing {
   constructor (x, y, v) {
     super(x, y, v);
     this.fill = '#89414e';
     this.hasPaths = false;
-    this.isCalculatingPaths = false;
-    this.worker = null;
     this.pathList = null;
   }
 
-  startPath (e) {
-    this.worker.terminate();
-    this.isCalculatingPaths = false;
-    this.pathList = e.data;
-    this.hasPaths = this.pathList.length > 0;
-  }
-
   getPath () {
-    this.isCalculatingPaths = true;
-    this.worker = new Worker('path.js');
-    this.worker.onmessage = this.startPath.bind(this);
-    this.worker.postMessage([levels.getCurrentGrid(), Bip.getLocations()]);
+    const gridData = levels.getCurrentGrid();
+    const bipLoc = Bip.getLocations();
+    let steps = Math.floor(Math.random()*5);
+
+    this.pathList = [];
+
+    while (steps-- > 0) {
+      const a = Math.round(Math.random()*1);
+      const b = Math.round(Math.random()*1);
+      const c = b === 0 ? 1 : -1;
+
+      if (a === 1) {
+        this.pathList.push([0,c]);
+      } else {
+        this.pathList.push([c,0]);
+      }
+    }
+
+    this.hasPaths = this.pathList.length > 0;
   }
 
   static getEnemies () {
@@ -47,10 +57,10 @@ class Enemy extends SquareBeing {
 
   static renderAll () {
     const enemies = this.enemies;
+    
     let i = enemies.length;
-
     while (i-- > 0) {
-      if (! enemies[i].hasPaths && ! enemies[i].isCalculatingPaths) {
+      if (! enemies[i].hasPaths) {
         enemies[i].getPath();
       }
 
