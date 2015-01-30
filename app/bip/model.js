@@ -30,12 +30,14 @@ class Bip extends SquareBeing {
   }
 
   static getLocations () {
-    let locations = [];
+    let locationsX = new Uint8Array(new ArrayBuffer(this.bips.length));
+    let locationsY = new Uint8Array(new ArrayBuffer(this.bips.length));
     let i = this.bips.length;
     while (i-- > 0) {
-      locations.push({x: this.bips[i].x, y: this.bips[i].y});
+      locationsX[i] = this.bips[i].x;
+      locationsY[i] = this.bips[i].y;
     }
-    return locations;
+    return [locationsX, locationsY];
   }
 
   static renderAll () {

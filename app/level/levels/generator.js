@@ -1,9 +1,7 @@
 function populateGrid (grid, width, height) {
   for (let i = 0; i < width; i++) {
-    grid.push([]);
-    for (let j = 0; j < height; j++) {
-      grid[i].push(0);
-    }
+    const buf = new ArrayBuffer(height)
+    grid.push(new Int8Array(buf));
   }
   return grid;
 }

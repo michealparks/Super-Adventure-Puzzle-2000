@@ -10,15 +10,20 @@ class Particle {
     this.velocityX = 0;
     this.velocityY = 0;
     this.scaleSpeed = 0.5;
+    this.frameDelay = 1000.0/60;
   }
 
-  update (ms) {
-    this.scale -= this.scaleSpeed * ms/1000.0;
+  update () {
+    if (this.scale === 0) return false;
+
+    this.scale -= this.scaleSpeed * this.frameDelay / 1000.0;
 
     if (this.scale < 0) this.scale = 0;
 
-    this.x += this.velocityX * ms/1000.0;
-    this.y += this.velocityY * ms/1000.0;
+    this.x += this.velocityX * this.frameDelay / 1000.0;
+    this.y += this.velocityY * this.frameDelay / 1000.0;
+
+    return true;
   }
 
   render () {
@@ -37,3 +42,5 @@ class Particle {
 
   }
 }
+
+export {Particle};

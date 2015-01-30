@@ -6,7 +6,7 @@ var data = new RandomlyGeneratedTerrain(
   /** height */ 24
 );
 
-data.colorKey = new Map();
+data.colorKey = [];
 data.colorKey[0] = '#333333';
 data.colorKey[1] = '#555555';
 data.colorKey[2] = '#262626';

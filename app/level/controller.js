@@ -1,34 +1,27 @@
 import {ctx} from 'canvas/controller';
+import {cacheCtx, cacheCanvas} from 'cacheCanvas/controller';
 import {levels, tileSize} from 'level/model';
 
-function renderGrid (levelName) {
+function renderGrid (levelName, toPreRender) {
   const level = levels[levelName];
   const grid = level.grid;
+  const _ctx = (toPreRender ? cacheCtx : ctx);
 
-  ctx.fillStyle = level.colorKey[0];
-  for (let i = 0, l = grid.length; i < l; i++) {
-    for (let j = 0, l = grid[i].length; j < l; j++) {
-      if (grid[i][j] === 0) {
-        ctx.fillRect(i*tileSize, j*tileSize, tileSize, tileSize);
+  for (let i = 0, l = level.colorKey.length; i < l; i++) {
+    _ctx.fillStyle = level.colorKey[i];
+    for (let j = 0, _l = grid.length; j < _l; j++) {
+      for (let k = 0, __l = grid[j].length; k < __l; k++) {
+        if (grid[j][k] === i) {
+          _ctx.fillRect(j*tileSize, k*tileSize, tileSize, tileSize);
+        }
       }
     }
   }
-
-  ctx.fillStyle = level.colorKey[1];
-  for (let i = 0, l = grid.length; i < l; i++) {
-    for (let j = 0, l = grid[i].length; j < l; j++) {
-      if (grid[i][j] === 1) {
-        ctx.fillRect(i*tileSize, j*tileSize, tileSize, tileSize);
-      }
-    }
-  }
-
-  // for (let i = 0, l = grid.length; i < l; i++) {
-  //   for (let j = 0, l = grid[i].length; j < l; j++) {
-  //     ctx.fillStyle = level.colorKey[grid[i][j]];
-  //     ctx.fillRect(i*tileSize, j*tileSize, tileSize, tileSize);
-  //   }
-  // }
 }
 
-export {renderGrid, tileSize};
+function renderGridFromCache () {
+
+  ctx.drawImage(cacheCanvas, 0, 0);
+}
+
+export {renderGrid, renderGridFromCache, tileSize};

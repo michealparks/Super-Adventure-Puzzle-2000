@@ -50,10 +50,3 @@ function onKeyUp (e) {
 
   bip.makeMovement();
 }
-
-function load () {
-  const entrancePoint = levels[levels.current()].entrancePoint;
-  Bip.addBip(new Bip(entrancePoint.x, entrancePoint.y));
-}
-
-export {load};

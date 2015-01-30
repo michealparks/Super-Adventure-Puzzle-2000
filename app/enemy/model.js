@@ -2,10 +2,6 @@ import {SquareBeing} from 'square_being/model';
 import {levels} from 'level/model';
 import {Bip} from 'bip/model';
 
-function getPaths () {
-  return
-}
-
 class Enemy extends SquareBeing {
   constructor (x, y, v) {
     super(x, y, v);
@@ -45,19 +41,24 @@ class Enemy extends SquareBeing {
     this.enemies.push(enemy);
   }
 
-  static removeEnemy (coord) {
-    let enemies = this.enemies;
-    let i = enemies.length;
+  static delete (i) {
+    this.enemies.splice(i, 1);
+  }
+
+  static getLocations () {
+    let locationsX = new Uint8Array(new ArrayBuffer(this.enemies.length));
+    let locationsY = new Uint8Array(new ArrayBuffer(this.enemies.length));
+    let i = this.enemies.length;
     while (i-- > 0) {
-      if (enemies[i].x === coord.x && enemies[i].y === coord.y) {
-        enemies.splice(i, 1);
-      }
+      locationsX[i] = this.enemies[i].x;
+      locationsY[i] = this.enemies[i].y;
     }
+    return [locationsX, locationsY];
   }
 
   static renderAll () {
     const enemies = this.enemies;
-    
+
     let i = enemies.length;
     while (i-- > 0) {
       if (! enemies[i].hasPaths) {

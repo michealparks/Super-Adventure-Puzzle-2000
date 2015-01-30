@@ -3,12 +3,13 @@ import {levels} from 'level/model';
 import {Bip} from 'bip/model';
 import {Enemy} from 'enemy/model';
 import 'bip/controller';
+import 'collision/model';
 
 levels.current('level_1');
 
 const entrancePoint = levels[levels.current()].entrancePoint;
 
-for (let i = 0; i < 800; i++) {
+for (let i = 0; i < 5; i++) {
   Enemy.addEnemy(new Enemy(0, 0, 0.125));
 }
 
