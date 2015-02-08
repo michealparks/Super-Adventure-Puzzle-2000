@@ -2,7 +2,7 @@ import {SquareBeing} from 'square_being/model';
 import {levels} from 'level/model';
 import {Bip} from 'bip/model';
 
-class Enemy extends SquareBeing {
+export class Enemy extends SquareBeing {
   constructor (x, y, v) {
     super(x, y, v);
     this.fill = '#89414e';
@@ -11,8 +11,6 @@ class Enemy extends SquareBeing {
   }
 
   getPath () {
-    const gridData = levels.getCurrentGrid();
-    const bipLoc = Bip.getLocations();
     let steps = Math.floor(Math.random()*5);
 
     this.pathList = [];
@@ -75,7 +73,4 @@ class Enemy extends SquareBeing {
       enemies[i].render();
     }
   }
-
 }
-
-export {Enemy};

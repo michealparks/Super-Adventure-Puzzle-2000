@@ -10,9 +10,13 @@ meta(name="mobile-web-app-capable" content="yes")
 link(href="style.css" rel="stylesheet")
 
 body
+  #terrain-types
+    #0-floor floor
+    #1-ground ground
+    #2-entrance entrance
+    #3-exit exit
+      
   canvas(id="canvas")
-  include menu/index
-  include toolbar/index
     
 script(src="script.js")
 script require('app');

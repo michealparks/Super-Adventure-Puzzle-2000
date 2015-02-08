@@ -1,7 +1,6 @@
 function populateGrid (grid, width, height) {
   for (let i = 0; i < width; i++) {
-    const buf = new ArrayBuffer(height)
-    grid.push(new Int8Array(buf));
+    grid.push(new Int8Array(new ArrayBuffer(height)));
   }
   return grid;
 }
@@ -29,7 +28,7 @@ function generateRandomPointAlongWall (width, height) {
   }
 }
 
-class RandomlyGeneratedTerrain {
+export class RandomlyGeneratedTerrain {
   constructor (width, height) {
     this.width = width;
     this.height = height;
@@ -47,5 +46,3 @@ class RandomlyGeneratedTerrain {
     this.exitPoint = exitPoint;
   }
 }
-
-export {RandomlyGeneratedTerrain};

@@ -1,11 +1,11 @@
 import {ctx} from 'canvas/controller';
 
-class Particle {
+export class Particle {
   constructor () {
     this.scale = 1.0;
     this.x = 0;
     this.y = 0;
-    this.radius = 20;
+    this.radius = 30;
     this.color = '#000';
     this.velocityX = 0;
     this.velocityY = 0;
@@ -42,5 +42,3 @@ class Particle {
 
   }
 }
-
-export {Particle};

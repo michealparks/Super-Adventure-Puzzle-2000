@@ -1,6 +1,26 @@
-import {ctx} from 'canvas/controller';
+import {ctx, scaleFactor} from 'canvas/controller';
 import {cacheCtx, cacheCanvas} from 'cacheCanvas/controller';
-import {levels, tileSize} from 'level/model';
+
+import {data as level_1} from 'level/levels/level_1';
+import {data as level_2} from 'level/levels/level_2';
+
+const tileSize = 25*scaleFactor;
+
+const levels = {
+  _current: null,
+
+  'level_1': level_1,
+  'level_2': level_2,
+
+  current (newLevel) {
+    if (newLevel) levels._current = newLevel;
+    return levels._current;
+  },
+
+  getCurrentGrid () {
+    return levels[levels._current].grid;
+  }
+};
 
 function renderGrid (levelName, toPreRender) {
   const level = levels[levelName];
@@ -20,8 +40,12 @@ function renderGrid (levelName, toPreRender) {
 }
 
 function renderGridFromCache () {
-
   ctx.drawImage(cacheCanvas, 0, 0);
 }
 
-export {renderGrid, renderGridFromCache, tileSize};
+export {
+  levels,
+  renderGrid, 
+  renderGridFromCache, 
+  tileSize
+};

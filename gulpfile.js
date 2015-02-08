@@ -18,29 +18,29 @@ var jade = require('gulp-jade');
 // Server
 var webserver = require('gulp-webserver');
 
-gulp.task('scripts', function () {
+gulp.task('main', function () {
   gulp.src(['app/**/*.js'])
     .pipe(to5({loose: 'all', modules: 'amd', moduleIds: true}))
     .pipe(addsrc.prepend('lib/**/*.js'))
     .pipe(concat('script.js'))
     .pipe(gulp.dest('build'));
-});
 
-gulp.task('workers', function () {
   gulp.src(['workers/**/*.js'])
     .pipe(to5({loose: 'all'}))
     .pipe(gulp.dest('build'));
-});
 
-gulp.task('stylus', function () {
   gulp.src(['app/**/*.styl'])
     .pipe(stylus({use: nib(), compress: true}))
     .pipe(concat('style.css'))
     .pipe(gulp.dest('build'));
+
+  gulp.src(['app/index.jade'])
+    .pipe(jade({}))
+    .pipe(gulp.dest('build'));
 });
 
-gulp.task('jade', function () {
-  gulp.src(['app/**/*.jade'])
+gulp.task('level-builder', function () {
+  gulp.src(['level-builder/index.jade'])
     .pipe(jade({}))
     .pipe(gulp.dest('build'));
 });
@@ -57,17 +57,9 @@ gulp.task('webserver', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(['app/**', 'workers/**'], [
-    'scripts',
-    'workers',
-    'stylus',
-    'jade']);
+  gulp.watch(['app/**', 'workers/**'], []);
 });
 
-gulp.task('default', [
-  'scripts',
-  'workers',
-  'stylus',
-  'jade',
-  'webserver',
-  'watch']);
+gulp.task('default', ['main', 'webserver', 'watch']);
+gulp.task('build', ['main']);
+gulp.task('build-level', ['level-builder']);

@@ -1,8 +1,8 @@
 const hasTouch = window.ontouchstart !== undefined;
 
-var ptrdown;
-var ptrup;
-var ptrmove;
+let ptrdown;
+let ptrup;
+let ptrmove;
 
 if (navigator.pointerEnabled || navigator.msPointerEnabled) {
   ptrdown = 'pointerdown';
