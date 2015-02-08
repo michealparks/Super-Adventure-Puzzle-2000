@@ -1,5 +1,5 @@
 import {ctx} from 'canvas/controller';
-import {levels, tileSize} from 'level/model';
+import {levels, tileSize} from 'level/controller';
 
 export class SquareBeing {
   constructor (x, y, v) {

@@ -2,10 +2,9 @@ import {renderGrid, renderGridFromCache} from 'level/controller';
 import {renderParticles} from 'particle/controller';
 import {Bip} from 'bip/model';
 import {Enemy} from 'enemy/model';
-import {levels} from 'level/model';
+import {levels} from 'level/controller';
 
-var frameId;
-var level;
+let frameId;
 
 function frame (stamp) {
   renderGridFromCache();

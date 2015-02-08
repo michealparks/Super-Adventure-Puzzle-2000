@@ -55,7 +55,7 @@ data.characters = [
 
 ];
 
-data.executeEvent () {
+data.executeEvent = function () {
   const upcomingEvent = data.story[data.storyStage];
 }
 
@@ -63,6 +63,7 @@ data.storyArcGenerator = function* storyArcGenerator () {
   while (true) {
     yield data.story[data.storyStage].execute();
     data.storyStage++;
+  }
 };
 
 export {data};

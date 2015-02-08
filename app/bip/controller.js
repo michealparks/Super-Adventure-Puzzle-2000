@@ -1,4 +1,4 @@
-import {levels} from 'level/model';
+import {levels} from 'level/controller';
 import {hasTouch, ptrdown, ptrmove, ptrup} from 'device/model';
 import {Bip} from 'bip/model';
 

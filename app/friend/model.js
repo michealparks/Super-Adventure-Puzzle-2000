@@ -1,5 +1,5 @@
 import {SquareBeing} from 'square_being/model';
-import {levels} from 'level/model';
+import {levels} from 'level/controller';
 
 export class Friend extends SquareBeing {
   constructor (x, y, v) {

@@ -1,5 +1,5 @@
 import {SquareBeing} from 'square_being/model';
-import {levels} from 'level/model';
+import {levels} from 'level/controller';
 import {Bip} from 'bip/model';
 
 export class Enemy extends SquareBeing {
@@ -10,7 +10,7 @@ export class Enemy extends SquareBeing {
     this.pathList = null;
   }
 
-  getPath () {
+  makeRandomMove () {
     let steps = Math.floor(Math.random()*5);
 
     this.pathList = [];
@@ -60,7 +60,7 @@ export class Enemy extends SquareBeing {
     let i = enemies.length;
     while (i-- > 0) {
       if (! enemies[i].hasPaths) {
-        enemies[i].getPath();
+        enemies[i].makeRandomMove();
       }
 
       if (! enemies[i].isOnPath && enemies[i].hasPaths) {

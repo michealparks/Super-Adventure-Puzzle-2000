@@ -1,7 +1,7 @@
 import {Bip} from 'bip/model';
 import {Enemy} from 'enemy/model';
 import {createExplosion} from 'particle/controller';
-import {tileSize} from 'level/model'
+import {tileSize} from 'level/controller'
 
 const centerOffset = tileSize / 2;
 
