@@ -1,7 +1,7 @@
 import {subscribe} from 'utils/mediator';
 
-import {levels}    from 'level/controller';
-import {particles} from 'particle/controller';
+var frameId;
+var level;
 
 import {bips}    from 'bip/controller';
 import {enemies} from 'enemy/controller';
