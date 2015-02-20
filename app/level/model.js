@@ -1,23 +1,49 @@
-import {scaleFactor} from 'canvas/controller';
-import {data as level_1} from 'level/levels/level_1';
-import {data as level_2} from 'level/levels/level_2';
+import {subscribe, unsubscribe} from 'utils/mediator';
 
-const tileSize = 25*scaleFactor;
+export class Level {
+  constructor(config, events) {
+    this.eventIterator = 0;
+    this.currentEvent = null;
+    this.events = events;
+    this.gridData = config.gridData;
+    this.colorKey = config.colorKey;
 
-const levels = {
-  _current: null,
+    this.currentLocationCriteria
 
-  'level_1': level_1,
-  'level_2': level_2,
-
-  current (newLevel) {
-    if (newLevel) levels._current = newLevel;
-    return levels._current;
-  },
-
-  getCurrentGrid () {
-    return levels[levels._current];
+    this.concludeEvent = this.concludeEvent.bind(this);
+    this.testLocation = this.testLocation.bind(this);
   }
-};
 
-export {levels, tileSize};
+  startEvent() {
+    this.currentEvent = this.events[this.eventIterator];
+
+    switch (this.currentEvent.requirements.type) {
+      case 'time':
+        window.setTimeout(this.concludeEvent, this.currentEvent.requirements.criteria);
+        break;
+      case 'location': 
+        this.currentLocationCriteria = this.currentEvent.requirements.criteria;
+        subscribe('bip::location', this.testLocation);
+        break;
+
+      default:
+        this.concludeEvent();
+    }
+  }
+
+  testLocation(e) {
+    if (e[0] === this.currentLocationCriteria[0] &&
+        e[1] === this.currentLocationCriteria[1]) {
+      this.concludeEvent();
+      unsubscribe('bip::location', this.testLocation);
+    }
+  }
+
+  concludeEvent() {
+    this.currentEvent.execute(() => {
+      if (this.events[++this.eventIterator]) {
+        this.startEvent();
+      }
+    });
+  }
+}

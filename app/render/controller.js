@@ -1,35 +1,36 @@
-import {renderGrid, renderGridFromCache} from 'level/controller';
-import {renderParticles} from 'particle/controller';
-import {Bip} from 'bip/model';
-import {Enemy} from 'enemy/model';
-import {levels} from 'level/model';
+import {subscribe} from 'utils/mediator';
 
-var frameId;
-var level;
+import {levels}    from 'level/controller';
+import {particles} from 'particle/controller';
 
-function frame (stamp) {
-  renderGridFromCache();
+import {bips}    from 'bip/controller';
+import {enemies} from 'enemy/controller';
+import {friends} from 'friend/controller';
 
-  Bip.renderAll();
-  Enemy.renderAll();
+import {ctx}                   from 'canvas/controller';
+import {cacheCtx, cacheCanvas} from 'cacheCanvas/controller';
 
-  renderParticles();
+let frameId = 0;
+
+subscribe('GLOBAL::pause', pause);
+subscribe('GLOBAL::resume', resume);
+
+function frame() {
+  ctx.drawImage(cacheCanvas, 0, 0);
+  bips.render(ctx);
+  enemies.render(ctx);
+  friends.render(ctx);
+  particles.render(ctx);
 
   frameId = window.requestAnimationFrame(frame);
 }
 
-function resumeRendering () {
-  renderGrid(levels.current(), true);
+function resume() {
+  levels.renderGrid(cacheCtx);
   frameId = window.requestAnimationFrame(frame);
 }
 
-function stopRendering () {
-  window.cancelAnimationFrame(frame);
+function pause() {
+  window.cancelAnimationFrame(frameId);
 }
 
-function toggleRender (toResume) {
-  if (toResume) resumeRendering();
-  else stopRendering();
-}
-
-export {toggleRender};

@@ -25,9 +25,9 @@ gulp.task('main', function () {
     .pipe(concat('script.js'))
     .pipe(gulp.dest('build'));
 
-  gulp.src(['workers/**/*.js'])
-    .pipe(to5({loose: 'all'}))
-    .pipe(gulp.dest('build'));
+  // gulp.src(['workers/**/*.js'])
+  //   .pipe(to5({loose: 'all'}))
+  //   .pipe(gulp.dest('build'));
 
   gulp.src(['app/**/*.styl'])
     .pipe(stylus({use: nib(), compress: true}))
@@ -36,6 +36,9 @@ gulp.task('main', function () {
 
   gulp.src(['app/index.jade'])
     .pipe(jade({}))
+    .pipe(gulp.dest('build'));
+
+  gulp.src(['assets/**/*'])
     .pipe(gulp.dest('build'));
 });
 
@@ -57,7 +60,7 @@ gulp.task('webserver', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(['app/**', 'workers/**'], []);
+  gulp.watch(['app/**', 'workers/**'], ['main']);
 });
 
 gulp.task('default', ['main', 'webserver', 'watch']);

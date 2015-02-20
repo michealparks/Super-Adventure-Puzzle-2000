@@ -1,51 +1,36 @@
-import {ctx, scaleFactor} from 'canvas/controller';
-import {cacheCtx, cacheCanvas} from 'cacheCanvas/controller';
+import {GLOBAL} from 'utils/global';
 
-import {data as level_1} from 'level/levels/level_1';
-import {data as level_2} from 'level/levels/level_2';
+import {data as level_1} from 'level/levels/level_1/model';
 
-const tileSize = 25*scaleFactor;
+const tileSize = GLOBAL.tileSize;
 
-const levels = {
-  _current: null,
-
-  'level_1': level_1,
-  'level_2': level_2,
-
-  current (newLevel) {
-    if (newLevel) levels._current = newLevel;
-    return levels._current;
-  },
-
-  getCurrentGrid () {
-    return levels[levels._current].grid;
+class Levels {
+  constructor() {
+    this._current = null;
+    this.level_1 = level_1;
   }
-};
 
-function renderGrid (levelName, toPreRender) {
-  const level = levels[levelName];
-  const grid = level.grid;
-  const _ctx = (toPreRender ? cacheCtx : ctx);
+  get current()     { return this._current; }
+  set current(name) { this._current = this[name]; }
 
-  for (let i = 0, l = level.colorKey.length; i < l; i++) {
-    _ctx.fillStyle = level.colorKey[i];
-    for (let j = 0, _l = grid.length; j < _l; j++) {
-      for (let k = 0, __l = grid[j].length; k < __l; k++) {
-        if (grid[j][k] === i) {
-          _ctx.fillRect(j*tileSize, k*tileSize, tileSize, tileSize);
+  get currentGrid() { return this._current.gridData.grid; }
+
+  renderGrid(ctx) {
+    const level = this._current;
+    const grid = level.gridData.grid;
+
+    for (let i = 0, il = level.colorKey.length; i < il; i++) {
+      ctx.fillStyle = level.colorKey[i];
+      for (let j = 0, jl = grid.length; j < jl; j++) {
+        for (let k = 0, kl = grid[j].length; k < kl; k++) {
+          if (grid[j][k] === i) {
+            ctx.fillRect(j*tileSize, k*tileSize, tileSize, tileSize);
+          }
         }
       }
     }
   }
 }
 
-function renderGridFromCache () {
-  ctx.drawImage(cacheCanvas, 0, 0);
-}
+export let levels = new Levels();
 
-export {
-  levels,
-  renderGrid, 
-  renderGridFromCache, 
-  tileSize
-};

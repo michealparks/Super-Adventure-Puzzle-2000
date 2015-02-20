@@ -1,74 +1,54 @@
-import {ctx} from 'canvas/controller';
-import {levels, tileSize} from 'level/model';
+import {GLOBAL}    from 'utils/global';
+import {subscribe} from 'utils/mediator';
+
+const tileSize = GLOBAL.tileSize;
 
 export class SquareBeing {
-  constructor (x, y, v) {
+  constructor(x, y, v = 0.5) {
     this.x = x;
     this.y = y;
     this.dx = 0;
     this.dy = 0;
-    this.velocity = v || 0.5;
+    this.velocity = v;
     this.moveId = null;
+    
     this.isOnPath = false;
-    this.grid = null;
+    this.stopRequested = false;
+
+    subscribe('GLOBAL::pause', this.pauseMovement.bind(this));
+
   }
 
-  setMovement (x, y) {
-    this.dx = x;
-    this.dy = y;
+  set direction(loc) {
+    this.dx = loc[0];
+    this.dy = loc[1];
   }
 
-  makeMovement () {
+  makeMovement() {
     let movementFrame = () => {
-
-      if (this.detectWallCollision(this.x, this.y, this.dx, this.dy, this.grid)) {
-        this.isOnPath = false;
-        return;
-      }
-
       this.x += (this.velocity*this.dx);
       this.y += (this.velocity*this.dy);
-
       this.moveId = window.setTimeout(movementFrame, 1000/60);
     }
 
-    this.grid = levels.getCurrentGrid();
-    this.moveId = window.setTimeout(movementFrame, 1000/60);
     this.isOnPath = true;
+    this.moveId = window.setTimeout(movementFrame, 1000/60);
   }
 
-  detectWallCollision (x, y, dx, dy, grid) {
-    if (Math.floor(x) !== x ||
-        Math.floor(y) !== y) return false;
-
-    // right
-    if (dx > 0) {
-      if (x+1 === grid.length) return true;
-      if (grid[x+1][y] === 1) return true;
-      // left
-    } else if (dx < 0) {
-      if (x === 0) return true;
-      if (grid[x-1][y] === 1) return true;
-      // down
-    } else if (dy > 0) {
-      if (y+1 === grid[x].length) return true;
-      if (grid[x][y+1] === 1) return true;
-      // up
-    } else if (dy < 0) {
-      if (y === 0) return true;
-      if (grid[x][y-1] === 1) return true;
-    }
-
-    return false;
+  pauseMovement() {
+    window.clearTimeout(this.moveId);
   }
 
-  stopMovement () {
+  stopMovement() {
     window.clearTimeout(this.moveId);
     this.x = Math.round(this.x);
     this.y = Math.round(this.y);
+    this.dx = 0;
+    this.dy = 0;
+    this.isOnPath = false;
   }
 
-  render () {
+  render(ctx) {
     ctx.fillStyle = this.fill;
     ctx.fillRect(this.x*tileSize, this.y*tileSize, tileSize, tileSize);
   }
