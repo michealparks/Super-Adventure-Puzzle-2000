@@ -1,19 +1,17 @@
-export class GeneratedTerrain {
-  constructor(width, height) {
+export default class GeneratedTerrain {
+  constructor(width, height, position) {
     this.width = width;
     this.height = height;
+    this.position = position;
     this.grid = this.populateGrid([], width, height);
     this.grid = this.generateWalls(this.grid, width, height, /** freq */ 4);
 
     // Entrance and exit
-    const entrancePoint = this.generateWallPoint(width, height);
-    const exitPoint = this.generateWallPoint(width, height);
+    this.entrancePoint = this.generateWallPoint(width, height);
+    this.exitPoint = this.generateWallPoint(width, height);
 
-    this.grid[entrancePoint.x][entrancePoint.y] = 2;
-    this.grid[exitPoint.x][exitPoint.y] = 3;
-
-    this.entrancePoint = entrancePoint;
-    this.exitPoint = exitPoint;
+    this.grid[this.entrancePoint.x][this.entrancePoint.y] = 2;
+    this.grid[this.exitPoint.x][this.exitPoint.y] = 3;
   }
 
   flipCoin() {

@@ -1,4 +1,7 @@
+import {spliceArray} from 'utils/core';
+
 let channels = new Map();
+let idProvider = 0;
 
 export function publish (name, data) {
   let channel = channels.get(name);
@@ -11,19 +14,22 @@ export function publish (name, data) {
 } 
 
 export function subscribe (name, func) {
+  func.id = ++idProvider;
   if (! channels.has(name)) channels.set(name, []);
   channels.get(name).push(func);
+  return idProvider;
 }
 
-export function unsubscribe (name, func) {
+export function unsubscribe (name, id) {
   let channel = channels.get(name);
-  let result;
+  let result = false;
 
   if (! channel) throw new Error('No channel to unsubscribe from.');
 
   for (let i = 0, il = channel.length; i < il; i++) {
-    if (channel[i] === func) {
-      result = channel.splice(i, 1);
+    if (channel[i].id === id) {
+      spliceArray(channel, i);
+      result = true;
       break;
     }
   }

@@ -51,8 +51,6 @@ gulp.task('level-builder', function () {
 gulp.task('webserver', function () {
   gulp.src('build')
     .pipe(webserver({
-      host: process.env.IP,
-      port: process.env.PORT,
       livereload: true,
       directoryListing: false,
       open: true,

@@ -27,4 +27,4 @@ class Global {
   set canvasWidth(x)  { this._canvas.width  = x; }
 }
 
-export let GLOBAL = new Global();
+export default new Global();

@@ -1,4 +1,4 @@
-export class Sound {
+export default class Sound {
   constructor(sounds, dir) {
     this.dict = {};
     this.dir = dir;

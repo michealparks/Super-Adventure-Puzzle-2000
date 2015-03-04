@@ -1,6 +1,5 @@
 import {audioCtx} from 'sound/context';
-
-import {Sound} from 'sound/model';
+import Sound      from 'sound/model';
 
 class Music extends Sound {
   constructor() {
@@ -25,4 +24,4 @@ class Music extends Sound {
 }
 
 
-export let music = new Music();
+export default new Music();

@@ -1,32 +1,36 @@
 import {subscribe} from 'utils/mediator';
 
-var frameId;
-var level;
-
-import {bips}    from 'bip/controller';
-import {enemies} from 'enemy/controller';
-import {friends} from 'friend/controller';
+import Bips      from 'bip/controller';
+import Enemies   from 'enemy/controller';
+import Friends   from 'friend/controller';
+import Particles from 'particle/controller';
+import Levels    from 'level/controller';
 
 import {ctx}                   from 'canvas/controller';
 import {cacheCtx, cacheCanvas} from 'cacheCanvas/controller';
 
 let frameId = 0;
+let lastTime = 0;
 
 subscribe('GLOBAL::pause', pause);
 subscribe('GLOBAL::resume', resume);
 
-function frame() {
+function frame(timeStamp) {
+  const delta = lastTime - timeStamp;
+  lastTime = timeStamp;
+
   ctx.drawImage(cacheCanvas, 0, 0);
-  bips.render(ctx);
-  enemies.render(ctx);
-  friends.render(ctx);
-  particles.render(ctx);
+
+  Bips.render(ctx, delta);
+  Enemies.render(ctx, delta);
+  Friends.render(ctx, delta);
+  Particles.render(ctx, delta);
 
   frameId = window.requestAnimationFrame(frame);
 }
 
 function resume() {
-  levels.renderGrid(cacheCtx);
+  Levels.renderGrid(cacheCtx);
   frameId = window.requestAnimationFrame(frame);
 }
 

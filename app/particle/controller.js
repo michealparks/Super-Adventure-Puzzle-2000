@@ -1,4 +1,5 @@
-import {Particle} from 'particle/model';
+import Util     from 'utils/core';
+import Particle from 'particle/model';
 
 class Particles {
   constructor() {
@@ -38,7 +39,7 @@ class Particles {
     while (i-- > 0) {
       let p = this.array[i];
       if (p.update()) p.render(ctx);
-      else            this.array.splice(i, 1);
+      else            Util.spliceArray(this.array, i);
     }
   }
 }

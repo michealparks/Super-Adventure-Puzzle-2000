@@ -1,12 +1,12 @@
 import {audioCtx} from 'sound/context';
-
-import {Sound} from 'sound/model';
+import Sound      from 'sound/model';
 
 class Effects extends Sound {
   constructor() {
     let sounds = [
       'hit.wav',
-      'explosion.wav'
+      'explosion.wav',
+      'talk.wav'
     ];
 
     super(sounds, 'effects');
@@ -14,4 +14,4 @@ class Effects extends Sound {
 
 }
 
-export let effects = new Effects();
+export default new Effects();

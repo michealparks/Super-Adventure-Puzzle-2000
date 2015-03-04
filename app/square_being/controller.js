@@ -1,11 +1,10 @@
-import {GLOBAL} from 'utils/global';
-
-import {particles} from 'particle/controller';
+import GLOBAL    from 'utils/global';
+import Particles from 'particle/controller';
 
 const tileSize = GLOBAL.tileSize;
 const centerOffset = tileSize / 2;
 
-export class BeingsArray {
+export default class BeingsArray {
   constructor() {
     this._array = [];
     this._current = null;

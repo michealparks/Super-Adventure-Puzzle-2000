@@ -1,11 +1,10 @@
-import {GLOBAL}             from 'utils/global';
+import GLOBAL               from 'utils/global';
 import {publish, subscribe} from 'utils/mediator'
 
-import {bips}    from 'bip/controller';
-import {enemies} from 'enemy/controller';
-import {levels}  from 'level/controller';
-
-import {effects} from 'sound/effects';
+import Bips    from 'bip/controller';
+import Enemies from 'enemy/controller';
+import Levels  from 'level/controller';
+import Effects from 'sound/effects';
 
 const tileSize = GLOBAL.tileSize;
 
@@ -20,17 +19,17 @@ subscribe('load::level', (level) => {
 function seekCollisions() {
   // Reverse loops are necessary to prevent indexing issues
   // since array is spliced during the loop.
-  let b = bips.array;
+  let b = Bips.array;
   let i = b.length;
   while (i-- > 0) {
     let bip = b[i];
 
     if (detectWallCollision(bip.x, bip.y, bip.dx, bip.dy, grid)) {
       bip.stopMovement();
-      effects.play('hit.wav');
+      Effects.play('hit.wav');
     }
 
-    let e = enemies.array;
+    let e = Enemies.array;
     let j = e.length;
     while (j-- > 0) {
       let enemy = e[j];
@@ -41,10 +40,10 @@ function seekCollisions() {
 
       if (detectEnemyCollision(bip, enemy)) {
         if (! bip.hasShield) {
-          bips.explode(i);
+          Bips.explode(i);
         }
-        enemies.explode(j);
-        effects.play('explosion.wav');
+        Enemies.explode(j);
+        Effects.play('explosion.wav');
       }
     }
   }

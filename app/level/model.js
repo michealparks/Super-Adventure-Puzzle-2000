@@ -1,49 +1,65 @@
 import {subscribe, unsubscribe} from 'utils/mediator';
+import Util                     from 'utils/core';
 
 export class Level {
   constructor(config, events) {
     this.eventIterator = 0;
-    this.currentEvent = null;
+    this.openEvents = [];
     this.events = events;
     this.gridData = config.gridData;
     this.colorKey = config.colorKey;
-
-    this.currentLocationCriteria
-
-    this.concludeEvent = this.concludeEvent.bind(this);
-    this.testLocation = this.testLocation.bind(this);
   }
 
   startEvent() {
-    this.currentEvent = this.events[this.eventIterator];
+    let current = this.events[this.eventIterator];
+    let done = () => {};
 
-    switch (this.currentEvent.requirements.type) {
+    if (current.blocking) {
+      done = this.concludeEvent.bind(this, this.eventIterator);
+    } else if (this.events[++this.eventIterator]) {
+      this.startEvent();
+    }
+
+    this.openEvents.push(new Event(current, done));
+  }
+
+  concludeEvent(i) {
+    Util.spliceArray(this.openEvents, i);
+    if (this.events[++this.eventIterator]) {
+      this.startEvent();
+    }
+  }
+}
+
+class Event {
+  constructor(config, done) {
+    this.execute = config.execute;
+    this.done = done;
+    this.criteria = config.requirements.criteria;
+    this.id = null;
+
+    switch(config.requirements.type) {
       case 'time':
-        window.setTimeout(this.concludeEvent, this.currentEvent.requirements.criteria);
+        window.setTimeout(this.conclude.bind(this), this.criteria);
         break;
-      case 'location': 
-        this.currentLocationCriteria = this.currentEvent.requirements.criteria;
-        subscribe('bip::location', this.testLocation);
+      case 'location':
+        this.id = subscribe('bip::location', this.testLocation.bind(this));
         break;
-
       default:
-        this.concludeEvent();
+        this.conclude();
     }
   }
 
-  testLocation(e) {
-    if (e[0] === this.currentLocationCriteria[0] &&
-        e[1] === this.currentLocationCriteria[1]) {
-      this.concludeEvent();
-      unsubscribe('bip::location', this.testLocation);
+  testLocation(location) {
+    if (location[0] == this.criteria[0] &&
+        location[1] == this.criteria[1]) {
+      this.conclude();
+      unsubscribe('bip::location', this.id);
     }
   }
 
-  concludeEvent() {
-    this.currentEvent.execute(() => {
-      if (this.events[++this.eventIterator]) {
-        this.startEvent();
-      }
-    });
+  conclude() {
+    console.log(this.done)
+    this.execute(this.done);
   }
 }

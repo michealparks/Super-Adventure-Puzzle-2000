@@ -1,4 +1,4 @@
-import {BeingsArray} from 'square_being/controller';
+import BeingsArray from 'square_being/controller';
 
 class Friends extends BeingsArray {
   constructor() {

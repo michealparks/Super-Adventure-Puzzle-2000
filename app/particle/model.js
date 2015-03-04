@@ -1,4 +1,4 @@
-export class Particle {
+export default class Particle {
   constructor(x, y, c, r, ss, vx, vy) {
     this.x = x;
     this.y = y;

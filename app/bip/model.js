@@ -1,8 +1,8 @@
 import {subscribe} from 'utils/mediator';
 
-import {SquareBeing} from 'square_being/model';
+import SquareBeing from 'square_being/model';
 
-export class Bip extends SquareBeing {
+export default class Bip extends SquareBeing {
   constructor (x, y, v) {
     super(x, y, v);
     this.type = 'bip';

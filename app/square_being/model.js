@@ -1,9 +1,9 @@
-import {GLOBAL}    from 'utils/global';
+import GLOBAL      from 'utils/global';
 import {subscribe} from 'utils/mediator';
 
 const tileSize = GLOBAL.tileSize;
 
-export class SquareBeing {
+export default class SquareBeing {
   constructor(x, y, v = 0.5) {
     this.x = x;
     this.y = y;
@@ -11,17 +11,23 @@ export class SquareBeing {
     this.dy = 0;
     this.velocity = v;
     this.moveId = null;
+    this.gridPosition = {x: 0, y: 0};
     
     this.isOnPath = false;
     this.stopRequested = false;
 
     subscribe('GLOBAL::pause', this.pauseMovement.bind(this));
-
+    subscribe('load::level', this.onLevelLoad.bind(this));
   }
 
   set direction(loc) {
     this.dx = loc[0];
     this.dy = loc[1];
+  }
+
+  onLevelLoad(level) {
+    this.gridPosition.x = level.gridData.position.x * tileSize;
+    this.gridPosition.y = level.gridData.position.y * tileSize;
   }
 
   makeMovement() {
@@ -50,6 +56,10 @@ export class SquareBeing {
 
   render(ctx) {
     ctx.fillStyle = this.fill;
-    ctx.fillRect(this.x*tileSize, this.y*tileSize, tileSize, tileSize);
+    ctx.fillRect(
+      this.gridPosition.x + (this.x*tileSize), 
+      this.gridPosition.y + (this.y*tileSize), 
+      tileSize, 
+      tileSize);
   }
 }

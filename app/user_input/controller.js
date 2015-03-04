@@ -1,7 +1,7 @@
-import {GLOBAL} from 'utils/global';
+import GLOBAL from 'utils/global';
 import {hasTouch, ptrdown, ptrmove, ptrup} from 'utils/device';
 
-import {bips} from 'bip/controller';
+import Bips from 'bip/controller';
 
 class UserInput {
   constructor() {
@@ -30,7 +30,7 @@ class UserInput {
   }
 
   onInGameKeyUp(e) {
-    const bip = bips.current;
+    const bip = Bips.current;
     bip.stopMovement();
     bip.direction = [(e.keyCode-38)%2, (e.keyCode-39)%2];
     bip.makeMovement();
@@ -50,7 +50,7 @@ class UserInput {
   }
 
   onInGamePtrUp(e) {
-    const bip = bips.current;
+    const bip = Bips.current;
     const touch = e.changedTouches[0];
     const swipeDeltaX = touch.pageX - this.ptrDownX;
     const swipeDeltaY = touch.pageY - this.ptrDownY;

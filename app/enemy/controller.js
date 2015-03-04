@@ -1,4 +1,4 @@
-import {BeingsArray} from 'square_being/controller';
+import BeingsArray from 'square_being/controller';
 
 class Enemies extends BeingsArray {
   constructor() {
@@ -20,4 +20,4 @@ class Enemies extends BeingsArray {
   }
 }
 
-export let enemies = new Enemies();
+export default new Enemies();

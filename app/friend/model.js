@@ -1,4 +1,4 @@
-import {SquareBeing} from 'square_being/model';
+import SquareBeing from 'square_being/model';
 
 export class Friend extends SquareBeing {
   constructor(x, y, v) {

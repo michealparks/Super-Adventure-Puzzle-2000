@@ -1,8 +1,8 @@
-import {GLOBAL} from 'utils/global';
-
+import GLOBAL  from 'utils/global';
+import Effects from 'sound/effects';
 import {ptrup} from 'utils/device';
 
-export class Dialog {
+export default class Dialog {
   constructor(speed, dialog, done) {
     this.speed = speed;
     this.dialog = dialog;
@@ -65,6 +65,7 @@ export class Dialog {
       if (i === text.length) {
         this.onTypeTextDone();
       } else {
+        Effects.play('talk.wav');
         this.textDiv.innerHTML += text.charAt(i++);
         window.setTimeout(type, this.speed);
       }
