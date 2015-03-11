@@ -7,11 +7,37 @@ export default class GeneratedTerrain {
     this.grid = this.generateWalls(this.grid, width, height, /** freq */ 4);
 
     // Entrance and exit
-    this.entrancePoint = this.generateWallPoint(width, height);
-    this.exitPoint = this.generateWallPoint(width, height);
+    this.entrances = new Map();
+    const tempEnt = this.generateWallPoint(width, height);
+    this.entrances.set(`${tempEnt.x},${tempEnt.y}`, {
+      x: tempEnt.x,
+      y: tempEnt.y,
+      dir: {x: 0, y: 0},
+      leadsTo: {
+        level: 'level_1',
+        entrance: 0
+      }
+    });
 
-    this.grid[this.entrancePoint.x][this.entrancePoint.y] = 2;
-    this.grid[this.exitPoint.x][this.exitPoint.y] = 3;
+    this.exits = new Map();
+    const tempExit = this.generateWallPoint(width, height);
+    this.exits.set(`${tempExit.x},${tempExit.y}`, {
+      x: tempExit.x,
+      y: tempExit.y,
+      dir: {x: 0, y: 0},
+      leadsTo: {
+        level: 'level_3',
+        entrance: 0
+      }
+    });
+
+    this.entrances.forEach((entrance) => {
+      this.grid[entrance.x][entrance.y] = 1;
+    });
+
+    this.exits.forEach((exit) => {
+      this.grid[exit.x][exit.y] = 2;
+    });
   }
 
   flipCoin() {
@@ -28,7 +54,7 @@ export default class GeneratedTerrain {
   generateWalls(grid, width, height, freq) {
     for (let i = 0; i < freq; i++) {
       for (let j = 0; j < width; j++) {
-        grid[j][Math.floor(Math.random()*height)] = 1;
+        grid[j][Math.floor(Math.random()*height)] = 3;
       }
     }
     return grid;

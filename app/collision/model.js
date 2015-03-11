@@ -10,7 +10,7 @@ const tileSize = GLOBAL.tileSize;
 
 let grid;
 
-subscribe('load::level', (level) => { 
+subscribe('Levels::load', (level) => { 
   grid = level.gridData.grid; 
 
   window.setTimeout(seekCollisions, 1000/60);
@@ -24,7 +24,7 @@ function seekCollisions() {
   while (i-- > 0) {
     let bip = b[i];
 
-    if (detectWallCollision(bip.x, bip.y, bip.dx, bip.dy, grid)) {
+    if (detectWallCollision('bip', bip.x, bip.y, bip.dx, bip.dy, grid)) {
       bip.stopMovement();
       Effects.play('hit.wav');
     }
@@ -34,12 +34,13 @@ function seekCollisions() {
     while (j-- > 0) {
       let enemy = e[j];
 
-      if (detectWallCollision(enemy.x, enemy.y, enemy.dx, enemy.dy, grid)) {
+      if (detectWallCollision('enemy', enemy.x, enemy.y, enemy.dx, enemy.dy, grid)) {
         enemy.stopMovement();
       }
 
       if (detectEnemyCollision(bip, enemy)) {
-        if (! bip.hasShield) {
+        bip.changeShieldLevel(Math.round((bip.shieldLevel-0.20)*100)/100);
+        if (bip.shieldLevel == 0) {
           Bips.explode(i);
         }
         Enemies.explode(j);
@@ -51,28 +52,29 @@ function seekCollisions() {
   window.setTimeout(seekCollisions, 1000/60);
 }
 
-function detectWallCollision(x, y, dx, dy, grid) {
-  if (Math.floor(x) !== x ||
+function detectWallCollision(type, x, y, dx, dy, grid) {
+  if ((dx == 0 && dy == 0) ||
+      Math.floor(x) !== x ||
       Math.floor(y) !== y) return false;
 
-  publish('bip::location', [x, y]);
+  if (type == 'bip') publish('Bip::location', [x, y]);
 
     // >
   if (dx > 0) {
     if (x+1 === grid.length) return true;
-    if (grid[x+1][y] === 1) return true;
+    if (grid[x+1][y] === 3) return true;
     // <
   } else if (dx < 0) {
     if (x === 0) return true;
-    if (grid[x-1][y] === 1) return true;
+    if (grid[x-1][y] === 3) return true;
     // v
   } else if (dy > 0) {
     if (y+1 === grid[x].length) return true;
-    if (grid[x][y+1] === 1) return true;
+    if (grid[x][y+1] === 3) return true;
     // ^
   } else if (dy < 0) {
     if (y === 0) return true;
-    if (grid[x][y-1] === 1) return true;
+    if (grid[x][y-1] === 3) return true;
   }
 
   return false;

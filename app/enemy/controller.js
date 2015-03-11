@@ -6,7 +6,7 @@ class Enemies extends BeingsArray {
   }
 
   render(ctx) {
-    for (let i = 0, il = this._array.length, enemy; enemy = this._array[i], i < il; i++) {
+    for (let i = 0, enemy; enemy = this._array[i]; i++) {
       if (! enemy.hasPaths) enemy.createSimpleRandomPath();
       
       if (! enemy.isOnPath && enemy.hasPaths) {

@@ -1,95 +1,85 @@
-import GLOBAL  from 'utils/global';
-import Effects from 'sound/effects';
-import {ptrup} from 'utils/device';
+import GLOBAL    from 'utils/global';
+import {publish} from 'utils/mediator';
+import Effects   from 'sound/effects';
+import {ptrup}   from 'utils/device';
 
-export default class Dialog {
-  constructor(speed, dialog, done) {
-    this.speed = speed;
-    this.dialog = dialog;
-    this.currentDialog = null;
-    this.done = done;
-    this.iterator = 0;
-    this.div = document.createElement('div');
-    console.log(GLOBAL.canvasWidth)
-    this.div.style.width = window.innerWidth;
-    this.div.className = 'dialog';
-    this.div.innerHTML = `
-      <div id="text"></div>
-      <div id="next">></div>
-      <div id="choice">
-        <div id="yes">Yes</div>
-        <div id="no">No</div>
-      </div>`;
-    this.textDiv = this.div.querySelector('#text');
-    this.choiceDiv = this.div.querySelector('#choice');
-    this.nextBtn = this.div.querySelector('#next');
-    this.yesBtn = this.div.querySelector('#yes');
-    this.noBtn = this.div.querySelector('#no');
+const topDiv    = document.querySelector('#dialog');
+const textDiv   = topDiv.firstChild;
+const nextBtn   = topDiv.children[1];
+const choiceDiv = topDiv.lastChild;
 
-    this.nextBtn.addEventListener(ptrup, this.onNext.bind(this));
-    this.yesBtn.addEventListener(ptrup, this.onYesNo.bind(this, true)); 
-    this.noBtn.addEventListener(ptrup, this.onYesNo.bind(this, false));
+let speed = 50;
+let done;
+let iterator = 0;
+let dialog;
+let currentDialog;
 
-    document.body.appendChild(this.div);
-    window.setTimeout(this.init.bind(this), 100);
+choiceDiv.firstChild.addEventListener(ptrup, () => {
+  currentDialog.type = 'statement';
+  typeText(currentDialog.response[1]);
+});
+
+choiceDiv.lastChild.addEventListener(ptrup, () => {
+  currentDialog.type = 'statement';
+  typeText(currentDialog.response[0]);
+})
+
+export default function show(newDialog, callback) {
+  dialog = newDialog;
+  done = callback;
+  iterator = 0;
+  topDiv.classList.add('active');
+
+  publish('GLOBAL::pause');
+  next();
+}
+
+function next() {
+  if (step().done) {
+    remove();
   }
+}
 
-  init() {
-    this.div.classList.add('active');
-    this.onNext();
-  }
+function step() {
+  currentDialog = dialog[iterator++];
 
-  step() {
-    this.currentDialog = this.dialog[this.iterator++];
-    if (this.currentDialog !== undefined) {
-      this.typeText(this.currentDialog.text);
-    } else {
-      return {done: true};
+  if (currentDialog === undefined) return { done: true };
+
+  typeText(currentDialog.text);
+  return { done: false };
+}
+
+function typeText(text, done) {
+  textDiv.innerHTML = '';
+  nextBtn.classList.remove('active');
+  choiceDiv.classList.remove('active');
+
+  let i = 0;
+
+  function typeLetter() {
+    if (i == text.length) {
+      return onTypeTextDone();
     }
-    return {done: false};
+
+    Effects.play('talk.wav');
+    textDiv.innerHTML += text.charAt(i++);
+    window.setTimeout(typeLetter, speed);
   }
 
-  remove() {
-    this.div.classList.remove('active');
-    window.setTimeout(() => {
-      document.body.removeChild(this.div);
-      this.done();
-    }, 400);
-  }
+  typeLetter();
+}
 
-  typeText(text, done) {
-    this.textDiv.innerHTML = '';
-    this.nextBtn.classList.remove('active');
-    this.choiceDiv.classList.remove('active');
-    let i = 0, type = () => {
-      if (i === text.length) {
-        this.onTypeTextDone();
-      } else {
-        Effects.play('talk.wav');
-        this.textDiv.innerHTML += text.charAt(i++);
-        window.setTimeout(type, this.speed);
-      }
-    }
-    type();
+function onTypeTextDone() {
+  if (currentDialog.type === 'statement') {
+    nextBtn.classList.add('active');
+  } else {
+    choiceDiv.classList.add('active');
   }
+}
 
-  onTypeTextDone() {
-    if (this.currentDialog.type === 'statement') {
-      this.nextBtn.classList.add('active');
-    } else {
-      this.choiceDiv.classList.add('active');
-    }
-  }
+function remove() {
+  topDiv.classList.remove('active');
 
-  onNext() {
-    if (this.step().done) {
-      this.remove();
-    }
-  }
-
-  onYesNo(agreed) {
-    this.currentDialog.type = 'statement';
-    this.typeText(this.currentDialog.response[agreed-0]);
-  }
-
+  publish('GLOBAL::resume');
+  done();
 }

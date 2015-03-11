@@ -6,8 +6,12 @@ class Bips extends BeingsArray {
   }
 
   render(ctx) {
-    for (let i = 0, il = this._array.length; i < il; i++) {
-      this._array[i].render(ctx);
+    for (let i = 0, bip; bip = this._array[i]; i++) {
+      bip.render(ctx);
+
+      if (bip.shieldChange) {
+        bip.renderShieldChange();
+      }
     }
   }
 }

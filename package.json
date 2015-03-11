@@ -1,7 +1,8 @@
 {
   "name": "super-adventure-puzzle-2000",
   "dependencies": {
-    "gulp-6to5": "*",
+    "gulp": "*",
+    "gulp-babel": "*",
     "gulp-concat": "*",
     "gulp-add-src": "*",
     "gulp-uglify": "*",

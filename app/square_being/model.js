@@ -11,13 +11,13 @@ export default class SquareBeing {
     this.dy = 0;
     this.velocity = v;
     this.moveId = null;
-    this.gridPosition = {x: 0, y: 0};
+    this.gridPosition = { x: 0, y: 0 };
     
     this.isOnPath = false;
     this.stopRequested = false;
 
     subscribe('GLOBAL::pause', this.pauseMovement.bind(this));
-    subscribe('load::level', this.onLevelLoad.bind(this));
+    subscribe('Levels::load', this.onLevelLoad.bind(this));
   }
 
   set direction(loc) {
@@ -56,10 +56,19 @@ export default class SquareBeing {
 
   render(ctx) {
     ctx.fillStyle = this.fill;
-    ctx.fillRect(
+
+    ctx.drawImage(
+      this.image, 
       this.gridPosition.x + (this.x*tileSize), 
       this.gridPosition.y + (this.y*tileSize), 
       tileSize, 
-      tileSize);
+      tileSize
+    );
+
+    // ctx.fillRect(
+    //   this.gridPosition.x + (this.x*tileSize), 
+    //   this.gridPosition.y + (this.y*tileSize), 
+    //   tileSize, 
+    //   tileSize);
   }
 }

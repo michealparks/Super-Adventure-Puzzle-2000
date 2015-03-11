@@ -8,13 +8,12 @@ class UserInput {
     this.ptrDownX = 0;
     this.ptrDownY = 0;
 
+    console.log(ptrup)
+
     window.addEventListener('keyup', (e) => {
       if (GLOBAL.isInGame) this.onInGameKeyUp(e);
       else                 this.onOutGameKeyUp(e);
     });
-
-    // TODO - perhaps get rid of
-    if (! hasTouch) return;
 
     window.addEventListener(ptrdown, (e) => {
       if (GLOBAL.isInGame) this.onInGamePtrDown(e);
@@ -41,8 +40,8 @@ class UserInput {
   }
 
   onInGamePtrDown(e) {
-    this.ptrDownX = e.touches[0].pageX;
-    this.ptrDownY = e.touches[0].pageY;
+    this.ptrDownX = e.pageX || e.touches[0].pageX;
+    this.ptrDownY = e.pageY || e.touches[0].pageY;
   }
 
   onPtrMove(e) {
@@ -51,17 +50,15 @@ class UserInput {
 
   onInGamePtrUp(e) {
     const bip = Bips.current;
-    const touch = e.changedTouches[0];
-    const swipeDeltaX = touch.pageX - this.ptrDownX;
-    const swipeDeltaY = touch.pageY - this.ptrDownY;
+    const swipeDeltaX = (e.pageX || e.changedTouches[0].pageX) - this.ptrDownX;
+    const swipeDeltaY = (e.pageY || e.changedTouches[0].pageY) - this.ptrDownY;
 
     if (Math.abs(swipeDeltaX) > 10 || Math.abs(swipeDeltaY) > 10) {
-      bip.setMovement(0, 0);
       bip.stopMovement();
       if (Math.abs(swipeDeltaX) > Math.abs(swipeDeltaY)) {
-        bip.setMovement(swipeDeltaX > 0 ? 1 : -1, 0);
+        bip.direction = [swipeDeltaX > 0 ? 1 : -1, 0];
       } else {
-        bip.setMovement(0, swipeDeltaY < 0 ? -1 : 1);
+        bip.direction = [0, swipeDeltaY < 0 ? -1 : 1];
       }
       bip.makeMovement();
     }

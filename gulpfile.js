@@ -3,14 +3,14 @@
 var gulp = require('gulp');
 
 // Javascript
-var to5 = require('gulp-6to5');
+var babel  = require('gulp-babel');
 var concat = require('gulp-concat');
 var addsrc = require('gulp-add-src');
 var uglify = require('gulp-uglify');
 
 // CSS
 var stylus = require('gulp-stylus');
-var nib = require('nib');
+var nib    = require('nib');
 
 // HTML
 var jade = require('gulp-jade');
@@ -20,16 +20,17 @@ var webserver = require('gulp-webserver');
 
 gulp.task('main', function () {
   gulp.src(['app/**/*.js'])
-    .pipe(to5({loose: 'all', modules: 'amd', moduleIds: true}))
+    .pipe(babel({loose: 'all', modules: 'amd', moduleIds: true}))
+      .on('error', function (e) {
+        console.error(e.message);
+        this.emit('end');
+      })
     .pipe(addsrc.prepend('lib/**/*.js'))
     .pipe(concat('script.js'))
     .pipe(gulp.dest('build'));
 
-  // gulp.src(['workers/**/*.js'])
-  //   .pipe(to5({loose: 'all'}))
-  //   .pipe(gulp.dest('build'));
-
-  gulp.src(['app/**/*.styl'])
+  gulp.src(['app/**/!(variables)*.styl'])
+    .pipe(addsrc.prepend('app/variables.styl'))
     .pipe(stylus({use: nib(), compress: true}))
     .pipe(concat('style.css'))
     .pipe(gulp.dest('build'));
@@ -45,13 +46,30 @@ gulp.task('main', function () {
 gulp.task('level-builder', function () {
   gulp.src(['level-builder/index.jade'])
     .pipe(jade({}))
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('build/level-builder'));
+
+  gulp.src(['level-builder/!(lib)**/*.js'])
+    .pipe(babel({loose: 'all', modules: 'amd', moduleIds: true}))
+      .on('error', function (e) {
+        console.error(e.message);
+        this.emit('end');
+      })
+    .pipe(addsrc.prepend('level-builder/lib/**/*.js'))
+    .pipe(concat('script.js'))
+    .pipe(gulp.dest('build/level-builder'));
+
+  gulp.src(['level-builder/**/!(variables)*.styl'])
+    .pipe(addsrc.prepend('app/variables.styl'))
+    .pipe(stylus({use: nib(), compress: true}))
+    .pipe(concat('style.css'))
+    .pipe(gulp.dest('build/level-builder'));
 });
 
 gulp.task('webserver', function () {
   gulp.src('build')
     .pipe(webserver({
       livereload: true,
+      host: '0.0.0.0',
       directoryListing: false,
       open: true,
       fallback: 'index.html'
@@ -59,7 +77,7 @@ gulp.task('webserver', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(['app/**', 'workers/**'], ['main']);
+  gulp.watch(['app/**', 'assets/**', 'workers/**'], ['main']);
 });
 
 gulp.task('default', ['main', 'webserver', 'watch']);

@@ -45,4 +45,43 @@ The body in motion will explode in the fireball as well.""
 I will find that the fundamental physical laws of this universe
 are
 
+-------------------------------------
+
+Hello there! And welcome to a world that makes very little sense!
+
+My name is Professor. People call me Doctor Professor...
+
+because I have a PhD.
+
+Doubtless you have learned by now that this world is inhabited by 
+creatures call morons.
+
+-------------------------------------
+
+With my brains and your, er, willingness to mercilessly 
+slaughter anyone without thought, we're practically unstoppable!
+
+What do you say Bip?
+
+
+--------------------------------------
+
+There is a structure--a temple--that very few know about, and even
+fewer dare utter it's name...
+
+mostly because it's only mentioned in academic journals.
+
+It's called the Rhomicuboctohedron, and it's where we will find God.
+
+Well... in the way Einstein meant it.
+
+At least that's what conjecture supports. 
+
+Anyway. We're going there. To check it out.
+
+...
+
+Just be grateful we don't have to go to the Rhombicosidodecahedron. 
+
 */
+

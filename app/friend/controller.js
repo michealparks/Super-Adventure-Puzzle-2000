@@ -18,4 +18,4 @@ class Friends extends BeingsArray {
   }
 }
 
-export let friends = new Friends();
+export default new Friends();

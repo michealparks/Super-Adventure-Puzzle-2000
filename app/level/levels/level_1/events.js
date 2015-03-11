@@ -23,20 +23,8 @@ export default [
   blocking: true,
   requirements: {},
   execute(done) {
-    Bips.add(new Bip(config.gridData.entrancePoint.x, config.gridData.entrancePoint.y, 0.25));
-    done();
-  }
-},
-
-{
-  blocking: false,
-  requirements: {
-    type: 'location',
-    criteria: [config.gridData.exitPoint.x, config.gridData.exitPoint.y]
-  },
-  execute(done) {
-    Bips.delete(0);
-    publish('event::exit', config.gridData.exitPoint.leadsTo);
+    const entrance = config.gridData.entrances.get('2,0');
+    Bips.add(new Bip(entrance.x, entrance.y, 0.25));
     done();
   }
 }

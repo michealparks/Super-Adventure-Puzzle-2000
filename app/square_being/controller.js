@@ -35,7 +35,8 @@ export default class BeingsArray {
 
   explode(i) {
     const deleted = this.delete(i);
-    particles.createExplosion(
+    GLOBAL.shakeLevel = 15;
+    Particles.createExplosion(
       (deleted.x * tileSize) + centerOffset,
       (deleted.y * tileSize) + centerOffset,
       deleted.fill);

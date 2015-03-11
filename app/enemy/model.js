@@ -4,7 +4,9 @@ export default class Enemy extends SquareBeing {
   constructor(x, y, v) {
     super(x, y, v);
     this.type = 'enemy';
-    this.fill = '#89414e';
+    this.image = new Image();
+    this.image.src = 'img/enemy.png';
+    this.fill = '#e74c3c';
     this.hasPaths = false;
     this.pathList = null;
   }

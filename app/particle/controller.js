@@ -5,10 +5,10 @@ class Particles {
   constructor() {
     this.array = [];
     this.minRadius = 10;
-    this.maxRadius = 30;
+    this.maxRadius = 40;
     this.count = 10;
-    this.minSpeed = 60.0
-    this.maxSpeed = 200.0;
+    this.minSpeed = 100.0
+    this.maxSpeed = 300.0;
     this.minScaleSpeed = 1.0;
     this.maxScaleSpeed = 4.0;
   }
@@ -44,4 +44,4 @@ class Particles {
   }
 }
 
-export let particles = new Particles();
+export default new Particles();
