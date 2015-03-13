@@ -37,7 +37,6 @@ function frame(timeStamp) {
 
   if (GLOBAL.shakeLevel) preShake();
 
-
   ctx.drawImage(cacheCanvas, 0, 0);
 
   Bips.render(ctx, delta);

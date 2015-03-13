@@ -27,6 +27,59 @@ export default [
     Bips.add(new Bip(entrance.x, entrance.y, 0.25));
     done();
   }
-}
+},
+
+/**
+ *
+ */
+{
+  blocking: true,
+  requirements: {},
+  execute(done) {
+    for (let i = 0; i < 6; i++) Enemies.add(new Enemy(0, 0, 0.125));
+
+    function checkForEnemies() {
+      if (Enemies.array.length > 0) {
+        window.setTimeout(checkForEnemies, 400);
+      } else {
+        done();
+      }
+    }
+
+    checkForEnemies();
+  }
+},
+
+/**
+ *
+ */
+{
+  blocking: true,
+  requirements: {},
+  execute(done) {
+    publish('GLOBAL::immobile');
+    //Friends.add(new Friend(3, 2, 0.5));
+
+    Dialog([
+      {
+        type: 'statement',
+        text: 'Egad!'
+      }, {
+        type: 'statement',
+        text: 'There are enemies afoot!'
+      }, {
+        type: 'question',
+        text: 'Do you have your powerShield antigraviton annihilator equipped?',
+        response: [
+          'Well, I\'m sorry to say this, but you\'re quite screwed!',
+          'Thank Descartes!'
+        ]
+      }, {
+        type: 'statement',
+        text: 'Good luck!'
+      }
+    ], done);
+  }
+},
 
 ];

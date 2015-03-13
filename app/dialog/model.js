@@ -1,7 +1,10 @@
-import GLOBAL    from 'utils/global';
-import {publish} from 'utils/mediator';
-import Effects   from 'sound/effects';
-import {ptrup}   from 'utils/device';
+import GLOBAL        from 'utils/global';
+import {publish}     from 'utils/mediator';
+import Effects       from 'sound/effects';
+import {ptrup}       from 'utils/device';
+import {zoomToPoint} from 'canvas/controller';
+
+import Bips      from 'bip/controller';
 
 const topDiv    = document.querySelector('#dialog');
 const textDiv   = topDiv.firstChild;
@@ -13,6 +16,7 @@ let done;
 let iterator = 0;
 let dialog;
 let currentDialog;
+let scaleFactor = 1;
 
 choiceDiv.firstChild.addEventListener(ptrup, () => {
   currentDialog.type = 'statement';
@@ -22,7 +26,7 @@ choiceDiv.firstChild.addEventListener(ptrup, () => {
 choiceDiv.lastChild.addEventListener(ptrup, () => {
   currentDialog.type = 'statement';
   typeText(currentDialog.response[0]);
-})
+});
 
 export default function show(newDialog, callback) {
   dialog = newDialog;
@@ -31,6 +35,12 @@ export default function show(newDialog, callback) {
   topDiv.classList.add('active');
 
   publish('GLOBAL::pause');
+  zoomToPoint(
+    /* coord */ Bips.array[0], 
+    /* zoom */ 2, 
+    /* time */ 20, 
+    /* ease */ 'easeInOutQuart'
+  );
   next();
 }
 

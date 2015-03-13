@@ -9,7 +9,7 @@ class Bips extends BeingsArray {
     for (let i = 0, bip; bip = this._array[i]; i++) {
       bip.render(ctx);
 
-      if (bip.shieldChange) {
+      if (bip.shield.level < 1) {
         bip.renderShieldChange();
       }
     }

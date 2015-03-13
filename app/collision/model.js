@@ -39,7 +39,7 @@ function seekCollisions() {
       }
 
       if (detectEnemyCollision(bip, enemy)) {
-        bip.changeShieldLevel(Math.round((bip.shieldLevel-0.20)*100)/100);
+        bip.changeShieldLevel(Math.round((bip.shieldLevel-0.10)*100)/100);
         if (bip.shieldLevel == 0) {
           Bips.explode(i);
         }
