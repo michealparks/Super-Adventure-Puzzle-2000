@@ -8,4 +8,4 @@ require('./level/events/model')
 
 require('./collision/model')
 
-Levels.load('level_1')
+Levels.load('level_2')

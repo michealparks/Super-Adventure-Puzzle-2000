@@ -31,7 +31,7 @@ module.exports = [
     blocking: true,
     requirements: {
       type: 'location',
-      criteria: [8, 0]
+      criteria: [0, 5]
     },
     execute (done) {
       for (let i = 0; i < 6; i++) {

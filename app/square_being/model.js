@@ -1,5 +1,6 @@
 const { events } = require('../utils/enums')
 const { subscribe } = require('../utils/mediator')
+const config = require('../utils/global')
 
 class SquareBeing {
   constructor (x, y, v = 0.5) {
@@ -12,7 +13,7 @@ class SquareBeing {
     this.gridPosition = { x: 0, y: 0 }
     this.isOnPath = false
     this.stopRequested = false
-    this.tileSize = require('../utils/global').TILE_SIZE
+    this.tileSize = config.TILE_SIZE
 
     this.movementFrame = this.movementFrame.bind(this)
 
@@ -33,20 +34,20 @@ class SquareBeing {
   movementFrame () {
     this.x += (this.velocity * this.dx)
     this.y += (this.velocity * this.dy)
-    this.moveId = window.setTimeout(this.movementFrame, 1000 / 60)
+    this.moveId = setTimeout(this.movementFrame, 1000 / 60)
   }
 
   makeMovement () {
     this.isOnPath = true
-    this.moveId = window.setTimeout(this.movementFrame, 1000 / 60)
+    this.moveId = setTimeout(this.movementFrame, 1000 / 60)
   }
 
   pauseMovement () {
-    window.clearTimeout(this.moveId)
+    clearTimeout(this.moveId)
   }
 
   stopMovement () {
-    window.clearTimeout(this.moveId)
+    clearTimeout(this.moveId)
     this.x = Math.round(this.x)
     this.y = Math.round(this.y)
     this.dx = 0

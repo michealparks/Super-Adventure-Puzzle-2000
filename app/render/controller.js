@@ -6,8 +6,8 @@ const Enemies = require('../enemy/controller')
 const Friends = require('../friend/controller')
 const Particles = require('../particle/controller')
 const Levels = require('../level/controller')
-const {canvas, ctx} = require('../canvas/controller')
-const {cacheCtx, cacheCanvas} = require('../cacheCanvas/controller')
+const { canvas, ctx } = require('../canvas/controller')
+const { cacheCtx, cacheCanvas } = require('../cacheCanvas/controller')
 
 let frameId = 0
 let lastTime = 0

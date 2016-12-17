@@ -1,9 +1,9 @@
-const { canvas } = require('../canvas/controller')
+const config = require('../utils/global')
 const cacheCanvas = document.createElement('canvas')
 const cacheCtx = cacheCanvas.getContext('2d')
 
-cacheCanvas.height = canvas.height
-cacheCanvas.width = canvas.width
+cacheCanvas.height = config.CANVAS_HEIGHT
+cacheCanvas.width = config.CANVAS_WIDTH
 
 module.exports = {
   cacheCanvas,

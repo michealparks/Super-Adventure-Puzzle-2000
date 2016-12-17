@@ -14,10 +14,7 @@ class LevelTitle {
 
     let style = window.getComputedStyle(this.textEl)
 
-    this.textEl.style.margin = `
-      -${style.height.replace('px', '') / 2}px 
-      -${style.width.replace('px', '') / 2}px
-    `
+    this.textEl.style.margin = `-${style.height.replace('px', '') / 2}px -${style.width.replace('px', '') / 2}px`
     this.rootEl.classList.add('active')
   }
 

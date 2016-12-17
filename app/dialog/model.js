@@ -5,12 +5,12 @@ const { ptrup } = require('../utils/device')
 const { zoomToPoint } = require('../canvas/controller')
 const Bips = require('../bip/controller')
 
-const topDiv = document.querySelector('#dialog')
+const topDiv = document.querySelector('.dialog')
 const textDiv = topDiv.firstChild
 const nextBtn = topDiv.children[1]
 const choiceDiv = topDiv.lastChild
 
-let speed = 50
+let speed = 25
 let done
 let iterator = 0
 let dialog
@@ -26,6 +26,10 @@ choiceDiv.lastChild.addEventListener(ptrup, function () {
   typeText(currentDialog.response[0])
 })
 
+nextBtn.addEventListener(ptrup, function () {
+  next()
+})
+
 function show (newDialog, callback) {
   dialog = newDialog
   done = callback
@@ -33,17 +37,17 @@ function show (newDialog, callback) {
   topDiv.classList.add('active')
 
   publish(events.PAUSE)
-  zoomToPoint(
-    /* coord */ Bips.array[0],
-    /* zoom */ 2,
-    /* time */ 20,
-    /* ease */ 'easeInOutQuart'
-  )
+  // zoomToPoint(
+  //   /* coord */ Bips.array[0],
+  //   /* zoom */ 2,
+  //   /* time */ 20,
+  //   /* ease */ 'easeInOutQuart'
+  // )
   next()
 }
 
 function next () {
-  if (step().done) {
+  if (step()) {
     remove()
   }
 }
@@ -51,10 +55,10 @@ function next () {
 function step () {
   currentDialog = dialog[iterator++]
 
-  if (currentDialog === undefined) return { done: true }
+  if (currentDialog === undefined) return true
 
   typeText(currentDialog.text)
-  return { done: false }
+  return false
 }
 
 function typeText (text, done) {

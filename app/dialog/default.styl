@@ -6,51 +6,53 @@ $easeInOutQuart = cubic-bezier(0.770, 0.000, 0.175, 1.000)
   bottom: 0
   left: 0
   height: 100px
+  width: 100%
   font-family: "vt323"
   background-color: #fff
   opacity: 0
   transform: translate(0, 100%)
   transition: opacity 250ms, transform 400ms $easeInOutQuart
   
+.dialog.active
+  opacity: 1
+  transform: translate(0, 0)
+    
+.dialog__next
+.dialog__choice
+  position: absolute
+  bottom: 0
+  right: 0
+  text-align: center
+  font-size: 30px
+  opacity: 0
+  pointer-events: none
+  transition: opacity 250ms
+  
   &.active
     opacity: 1
-    transform: translate(0, 0)
-    
-  #next, #choice
-    position: absolute
-    bottom: 0
-    right: 0
-    text-align: center
-    font-size: 30px
-    opacity: 0
-    pointer-events: none
-    transition: opacity 250ms
-    
-    &.active
-      opacity: 1
-      pointer-events: auto
+    pointer-events: auto
   
-  #text
-    width: calc(100% - 60px)
-    box-sizing: border-box
-    padding: 10px
-    font-size: 24px
+.dialog__text
+  width: calc(100% - 60px)
+  box-sizing: border-box
+  padding: 10px
+  font-size: 24px
     
-  #next
-    width: 50px
-    line-height: 100px
-    font-size: 30px
+.dialog__next
+  width: 50px
+  line-height: 100px
+  font-size: 30px
     
-  #choice
-    position: absolute
-    top: 0
-    right: 0
-    height: 60px
-    width: 100%
+.dialog__choice
+  position: absolute
+  top: 0
+  right: 0
+  height: 60px
+  width: 100%
     
-  #yes
-    line-height: 48px
-    border-bottom: 2px solid
+.choice__yes
+  line-height: 48px
+  border-bottom: 2px solid
     
-  #no
-    line-height: 50px
+.choice__no
+  line-height: 50px

@@ -11,6 +11,8 @@ class Particles {
     this.maxSpeed = 300.0
     this.minScaleSpeed = 1.0
     this.maxScaleSpeed = 4.0
+
+    this.createExplosion = this.createExplosion.bind(this)
   }
 
   randomFloat (min, max) {

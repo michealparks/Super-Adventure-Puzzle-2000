@@ -6,11 +6,11 @@ const config = {
   IS_PLAYER_FROZEN: false,
   IS_LEVEL_EXITABLE: false,
 
-  SCALE: window.devicePixelRatio || 1,
-  TILE_SIZE: (window.devicePixelRatio || 1) * 25,
+  SCALE: window.devicePixelRatio,
+  TILE_SIZE: Math.ceil(window.devicePixelRatio * window.innerWidth / 15),
 
-  CANVAS_WIDTH: null,
-  CANVAS_HEIGHT: null,
+  CANVAS_WIDTH: window.innerWidth * window.devicePixelRatio,
+  CANVAS_HEIGHT: window.innerHeight * window.devicePixelRatio,
 
   SHAKE_MAGNITUDE: 0
 }

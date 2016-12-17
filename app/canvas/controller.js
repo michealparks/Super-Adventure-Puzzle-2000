@@ -1,18 +1,16 @@
 const config = require('../utils/global')
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
-const tileSize = config.TILE_SIZE
-const scaleFactor = window.devicePixelRatio || 1
 const cacheCanvas = document.createElement('canvas')
 const cacheCtx = cacheCanvas.getContext('2d')
 
-config.CANVAS_HEIGHT = cacheCanvas.height = canvas.height = window.innerHeight * scaleFactor
-config.CANVAS_WIDTH = cacheCanvas.width = canvas.width = window.innerWidth * scaleFactor
+cacheCanvas.height = canvas.height = config.CANVAS_HEIGHT
+cacheCanvas.width = canvas.width = config.CANVAS_WIDTH
 
 let curZoom = 1
 let curTranslateX = 0
 let curTranslateY = 0
-let desiredZoom
+let desiredZoom = 1
 
 function zoomToPoint (point, toSize, time, easingName) {
   desiredZoom = toSize
@@ -21,8 +19,8 @@ function zoomToPoint (point, toSize, time, easingName) {
 
   const centerX = Math.round(canvas.width / 2)
   const centerY = Math.round(canvas.height / 2)
-  const distanceX = -(centerX - (point.x * tileSize))
-  const distanceY = -(centerY - (point.y * tileSize))
+  const distanceX = -(centerX - (point.x * config.TILE_SIZE))
+  const distanceY = -(centerY - (point.y * config.TILE_SIZE))
   const velocityX = distanceX / time
   const velocityY = distanceY / time
   const zoomSpeed = Math.abs(toSize - curZoom) / time

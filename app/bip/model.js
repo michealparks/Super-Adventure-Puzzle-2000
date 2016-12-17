@@ -1,5 +1,6 @@
 const { subscribe } = require('../utils/mediator')
 const { events } = require('../utils/enums')
+const config = require('../utils/global')
 const { ctx } = require('../canvas/controller')
 const SquareBeing = require('../square_being/model')
 
@@ -8,54 +9,99 @@ class Bip extends SquareBeing {
     super(x, y, v)
     this.type = 'bip'
     this.image = new window.Image()
-    this.image.src = `img/bip.png`
+    this.image.src = 'img/bip.png'
     this.fill = '#ffffff'
+    this.isEntering = true
 
-    this.shield = {
-      alpha: 0,
-      level: 1,
-      animatedLevel: 1
-    }
-
-    this.shieldAnimLevel = 1
+    this.animLevel = 1
     this.shieldLevel = 1
     this.shieldLevelDiff = 0
-    this.shieldChange = false
     this.shieldAlpha = 0
-    this.isEntering = true
+    this.isTakingDamage = false
+    this.shouldFadeOut = false
+    this.shouldFadeIn = false
+    this.isVisible = false
+
+    this.switchFadeOut = this.switchFadeOut.bind(this)
+    this.startHealing = this.startHealing.bind(this)
 
     subscribe(events.RESUME, this.makeMovement.bind(this))
     subscribe(events.PLAYER_FROZEN, this.stopMovement.bind(this))
   }
 
-  absorbDamage (damageAmount) {
-    this.shield.level -= damageAmount
+  switchFadeOut () {
+    this.shouldFadeOut = true
+  }
 
-    // renderShield()
+  fadeOutShield () {
+    if (this.shieldAlpha >= 0) {
+      this.shieldAlpha -= 0.01
+    } else {
+      this.shouldFadeOut = false
+    }
+  }
+
+  fadeInShield () {
+    if (this.shieldAlpha < 1) {
+      this.shieldAlpha += 0.05
+    } else {
+      this.shouldFadeIn = false
+    }
+  }
+
+  startHealing () {
+    if (this.shieldLevel + 0.001 >= 1) {
+      this.shieldLevel = 1
+      return
+    }
+
+    this.shieldLevel += 0.001
+    this.animLevel = this.shieldLevel
+
+    this.shieldRegenTimerId = setTimeout(this.startHealing, 1000 / 60)
+  }
+
+  stopHealing () {
+    clearTimeout(this.shieldRegenTimerId)
   }
 
   renderShieldChange () {
-    if (this.shieldAnimLevel === this.shieldLevel) {
-      if (this.shieldAlpha === 1) {
-        this.shieldChange = false
-        return
-      } else {
-        this.shieldAlpha -= 0.01
-      }
-    } else {
-      this.shieldAnimLevel = Math.round((this.shieldAnimLevel + this.shieldLevelDiff) * 100) / 100
-      if (this.shieldAlpha < 1) this.shieldAlpha += 0.05
+    if (this.shouldFadeOut) this.fadeOutShield()
+    if (this.shouldFadeIn) this.fadeInShield()
+
+    if (this.isVisible && this.shieldLevel === 1) {
+      this.isTakingDamage = false
+      setTimeout(this.switchFadeOut, 500)
+    }
+
+    if (this.isTakingDamage) {
+      this.animLevel = Math.round((this.animLevel + this.shieldLevelDiff) * 100) / 100
+    }
+
+    if (this.isTakingDamage && this.shieldLevel === this.animLevel) {
+      this.stopHealing()
+
+      this.isTakingDamage = false
+      this.shieldRegenTimerId = setTimeout(this.startHealing, 500)
     }
 
     ctx.fillStyle = `rgba(241, 196, 15, ${this.shieldAlpha})`
-    ctx.fillRect(0, 0, window.innerWidth * this.shieldAnimLevel, 10)
+    ctx.fillRect(0, 0, this.CANVAS_WIDTH * this.animLevel, 10)
   }
 
   changeShieldLevel (x) {
+    this.isTakingDamage = x < this.shieldLevel
+
+    if (this.isTakingDamage) {
+      this.stopHealing()
+    }
+
+    this.shouldFadeIn = true
     this.shieldLevel = x
-    this.shieldLevelDiff = x < this.shieldAnimLevel ? -0.02 : 0.02
-    this.shieldChange = true
+    this.shieldLevelDiff = x < this.animLevel ? -0.02 : 0.02
   }
 }
+
+Bip.prototype.CANVAS_WIDTH = config.CANVAS_WIDTH
 
 module.exports = Bip

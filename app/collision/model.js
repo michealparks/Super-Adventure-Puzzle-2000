@@ -5,35 +5,43 @@ const Enemies = require('../enemy/controller')
 const Effects = require('../sound/effects')
 
 let grid
+let timerId
 
 subscribe(events.LOAD_LEVEL, function (level) {
+  if (timerId) {
+    clearTimeout(timerId)
+    timerId = null
+  }
+
   grid = level.gridData.grid
-  window.setTimeout(seekCollisions, 1000 / 60)
+  timerId = setTimeout(seekCollisions, 1000 / 60)
 })
 
 function seekCollisions () {
   // Reverse loops are necessary to prevent indexing issues
   // since array is spliced during the loop.
   let b = Bips.array
+  let e = Enemies.array
   let i = b.length
+  let bip, enemy, j
+
   while (i-- > 0) {
-    let bip = b[i]
+    bip = b[i]
 
     if (detectWallCollision('bip', bip.x, bip.y, bip.dx, bip.dy, grid)) {
       bip.stopMovement()
       Effects.play('hit.wav')
     }
 
-    let e = Enemies.array
-    let j = e.length
+    j = e.length
     while (j-- > 0) {
-      let enemy = e[j]
+      enemy = e[j]
 
       if (detectWallCollision('enemy', enemy.x, enemy.y, enemy.dx, enemy.dy, grid)) {
         enemy.stopMovement()
       }
 
-      if (detectEnemyCollision(bip, enemy)) {
+      if (detectEnemyCollision(bip.x, bip.y, enemy.x, enemy.y)) {
         bip.changeShieldLevel(Math.round((bip.shieldLevel - 0.10) * 100) / 100)
         if (bip.shieldLevel === 0) {
           Bips.explode(i)
@@ -44,7 +52,7 @@ function seekCollisions () {
     }
   }
 
-  window.setTimeout(seekCollisions, 1000 / 60)
+  timerId = window.setTimeout(seekCollisions, 1000 / 60)
 }
 
 function detectWallCollision (type, x, y, dx, dy, grid) {
@@ -77,18 +85,18 @@ function detectWallCollision (type, x, y, dx, dy, grid) {
   return false
 }
 
-function detectEnemyCollision (bip, enemy) {
-  if (bip.y === enemy.y) {
+function detectEnemyCollision (playerX, playerY, enemyX, enemyY) {
+  if (playerY === enemyY) {
     // left
-    if (enemy.x - bip.x < 1 && enemy.x - bip.x > 0) return true
+    if (enemyX - playerX < 1 && enemyX - playerX > 0) return true
     // right
-    if (bip.x - enemy.x < 1 && bip.x - enemy.x > 0) return true
+    if (playerX - enemyX < 1 && playerX - enemyX > 0) return true
   }
 
-  if (bip.x === enemy.x) {
+  if (playerX === enemyX) {
     // top
-    if (bip.y - enemy.y < 1 && bip.y - enemy.y > 0) return true
+    if (playerY - enemyY < 1 && playerY - enemyY > 0) return true
     // bottom
-    if (enemy.y - bip.y < 1 && enemy.y - bip.y > 0) return true
+    if (enemyY - playerY < 1 && enemyY - playerY > 0) return true
   }
 }

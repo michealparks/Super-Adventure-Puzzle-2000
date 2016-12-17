@@ -11,6 +11,10 @@ class Levels {
     this.level_1 = level1
     this.level_2 = level2
     this.canvasNode = document.getElementById('canvas')
+    this.name = null
+    this.done = null
+
+    this.finishLoad = this.finishLoad.bind(this)
   }
 
   get current () {
@@ -26,22 +30,26 @@ class Levels {
   }
 
   load (name, done) {
+    this.name = name
+    this.done = done
     this.canvasNode.classList.add('faded')
     publish(events.PAUSE)
     publish(events.EXIT_LEVEL)
 
-    window.setTimeout(() => {
-      this._current && this._current.clean()
-      this._current = this[name]
-      this._current.build()
-      this._current.startEvent()
-      publish(events.LOAD_LEVEL, this._current)
-      publish(events.RESUME)
+    setTimeout(this.finishLoad, 300)
+  }
 
-      done && done()
+  finishLoad () {
+    this._current && this._current.clean()
+    this._current = this[this.name]
+    this._current.build()
+    this._current.startEvent()
+    publish(events.LOAD_LEVEL, this._current)
+    publish(events.RESUME)
 
-      this.canvasNode.classList.remove('faded')
-    }, 300)
+    if (this.done) this.done()
+
+    this.canvasNode.classList.remove('faded')
   }
 
   renderGrid (ctx) {

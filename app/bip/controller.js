@@ -6,9 +6,6 @@ class Bips extends BeingsArray {
       b = this._array[i]
 
       b.render(ctx)
-
-      if (b.shield.level === 1) return
-
       b.renderShieldChange()
     }
   }

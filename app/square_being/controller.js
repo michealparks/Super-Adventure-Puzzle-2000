@@ -1,5 +1,5 @@
 const config = require('../utils/global')
-const Particles = require('../particle/controller')
+const { createExplosion } = require('../particle/controller')
 
 class BeingsArray {
   constructor () {
@@ -41,7 +41,7 @@ class BeingsArray {
 
     config.SHAKE_MAGNITUDE = 15
 
-    Particles.createExplosion(
+    createExplosion(
       (deleted.x * this.tileSize) + this.centerOffset,
       (deleted.y * this.tileSize) + this.centerOffset,
       deleted.fill)
