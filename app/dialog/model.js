@@ -1,95 +1,95 @@
-import GLOBAL        from 'utils/global';
-import {publish}     from 'utils/mediator';
-import Effects       from 'sound/effects';
-import {ptrup}       from 'utils/device';
-import {zoomToPoint} from 'canvas/controller';
+const { publish } = require('../utils/mediator')
+const { events } = require('../utils/enums')
+const Effects = require('../sound/effects')
+const { ptrup } = require('../utils/device')
+const { zoomToPoint } = require('../canvas/controller')
+const Bips = require('../bip/controller')
 
-import Bips      from 'bip/controller';
+const topDiv = document.querySelector('#dialog')
+const textDiv = topDiv.firstChild
+const nextBtn = topDiv.children[1]
+const choiceDiv = topDiv.lastChild
 
-const topDiv    = document.querySelector('#dialog');
-const textDiv   = topDiv.firstChild;
-const nextBtn   = topDiv.children[1];
-const choiceDiv = topDiv.lastChild;
+let speed = 50
+let done
+let iterator = 0
+let dialog
+let currentDialog
 
-let speed = 50;
-let done;
-let iterator = 0;
-let dialog;
-let currentDialog;
-let scaleFactor = 1;
+choiceDiv.firstChild.addEventListener(ptrup, function () {
+  currentDialog.type = 'statement'
+  typeText(currentDialog.response[1])
+})
 
-choiceDiv.firstChild.addEventListener(ptrup, () => {
-  currentDialog.type = 'statement';
-  typeText(currentDialog.response[1]);
-});
+choiceDiv.lastChild.addEventListener(ptrup, function () {
+  currentDialog.type = 'statement'
+  typeText(currentDialog.response[0])
+})
 
-choiceDiv.lastChild.addEventListener(ptrup, () => {
-  currentDialog.type = 'statement';
-  typeText(currentDialog.response[0]);
-});
+function show (newDialog, callback) {
+  dialog = newDialog
+  done = callback
+  iterator = 0
+  topDiv.classList.add('active')
 
-export default function show(newDialog, callback) {
-  dialog = newDialog;
-  done = callback;
-  iterator = 0;
-  topDiv.classList.add('active');
-
-  publish('GLOBAL::pause');
+  publish(events.PAUSE)
   zoomToPoint(
-    /* coord */ Bips.array[0], 
-    /* zoom */ 2, 
-    /* time */ 20, 
+    /* coord */ Bips.array[0],
+    /* zoom */ 2,
+    /* time */ 20,
     /* ease */ 'easeInOutQuart'
-  );
-  next();
+  )
+  next()
 }
 
-function next() {
+function next () {
   if (step().done) {
-    remove();
+    remove()
   }
 }
 
-function step() {
-  currentDialog = dialog[iterator++];
+function step () {
+  currentDialog = dialog[iterator++]
 
-  if (currentDialog === undefined) return { done: true };
+  if (currentDialog === undefined) return { done: true }
 
-  typeText(currentDialog.text);
-  return { done: false };
+  typeText(currentDialog.text)
+  return { done: false }
 }
 
-function typeText(text, done) {
-  textDiv.innerHTML = '';
-  nextBtn.classList.remove('active');
-  choiceDiv.classList.remove('active');
+function typeText (text, done) {
+  textDiv.innerHTML = ''
+  nextBtn.classList.remove('active')
+  choiceDiv.classList.remove('active')
 
-  let i = 0;
+  let i = 0
 
-  function typeLetter() {
-    if (i == text.length) {
-      return onTypeTextDone();
+  function typeLetter () {
+    if (i === text.length) {
+      return onTypeTextDone()
     }
 
-    Effects.play('talk.wav');
-    textDiv.innerHTML += text.charAt(i++);
-    window.setTimeout(typeLetter, speed);
+    Effects.play('talk.wav')
+    textDiv.innerHTML += text.charAt(i++)
+    window.setTimeout(typeLetter, speed)
   }
 
-  typeLetter();
+  typeLetter()
 }
 
-function onTypeTextDone() {
+function onTypeTextDone () {
   if (currentDialog.type === 'statement') {
-    nextBtn.classList.add('active');
+    nextBtn.classList.add('active')
   } else {
-    choiceDiv.classList.add('active');
+    choiceDiv.classList.add('active')
   }
 }
 
-function remove() {
-  topDiv.classList.remove('active');
+function remove () {
+  topDiv.classList.remove('active')
 
-  publish('GLOBAL::resume');
-  done();
+  publish(events.RESUME)
+  done()
 }
+
+module.exports = show

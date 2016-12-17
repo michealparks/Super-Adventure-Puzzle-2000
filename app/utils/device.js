@@ -1,6 +1,13 @@
-export const hasTouch   = window.ontouchstart !== undefined;
-export const ptrEnabled = navigator.pointerEnabled || navigator.msPointerEnabled;
+const hasTouch = 'ontouchstart' in window
+const ptrEnabled = navigator.pointerEnabled || navigator.msPointerEnabled
+const ptrdown = ptrEnabled ? 'pointerdown' : hasTouch ? 'touchstart' : 'mousedown'
+const ptrmove = ptrEnabled ? 'pointermove' : hasTouch ? 'touchmove' : 'mousemove'
+const ptrup = ptrEnabled ? 'pointerup' : hasTouch ? 'touchend' : 'mouseup'
 
-export const ptrdown = ptrEnabled? 'pointerdown': hasTouch? 'touchstart': 'mousedown';
-export const ptrmove = ptrEnabled? 'pointermove': hasTouch? 'touchmove': 'mousemove';
-export const ptrup   = ptrEnabled? 'pointerup': hasTouch? 'touchend': 'mouseup';
+module.exports = {
+  hasTouch,
+  ptrEnabled,
+  ptrdown,
+  ptrmove,
+  ptrup
+}

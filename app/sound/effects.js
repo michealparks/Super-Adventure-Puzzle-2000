@@ -1,17 +1,14 @@
-import {audioCtx} from 'sound/context';
-import Sound      from 'sound/model';
+const Sound = require('./model')
 
 class Effects extends Sound {
-  constructor() {
-    let sounds = [
+  constructor () {
+    super([
       'hit.wav',
       'explosion.wav',
       'talk.wav'
-    ];
-
-    super(sounds, 'effects');
+    ], 'effects')
   }
 
 }
 
-export default new Effects();
+module.exports = new Effects()

@@ -1,68 +1,58 @@
-import GLOBAL from 'utils/global';
-import Easing from 'utils/easing';
+const config = require('../utils/global')
+const canvas = document.getElementById('canvas')
+const ctx = canvas.getContext('2d')
+const tileSize = config.TILE_SIZE
+const scaleFactor = window.devicePixelRatio || 1
+const cacheCanvas = document.createElement('canvas')
+const cacheCtx = cacheCanvas.getContext('2d')
 
+config.CANVAS_HEIGHT = cacheCanvas.height = canvas.height = window.innerHeight * scaleFactor
+config.CANVAS_WIDTH = cacheCanvas.width = canvas.width = window.innerWidth * scaleFactor
 
-export const canvas = document.getElementById('canvas');
-export const ctx    = canvas.getContext('2d');
+let curZoom = 1
+let curTranslateX = 0
+let curTranslateY = 0
+let desiredZoom
 
-const tileSize      = GLOBAL.tileSize;
-const scaleFactor   = window.devicePixelRatio || 1;
-const cacheCanvas   = document.createElement('canvas');
-const cacheCtx      = cacheCanvas.getContext('2d');
+function zoomToPoint (point, toSize, time, easingName) {
+  desiredZoom = toSize
 
-GLOBAL.canvasHeight = canvas.height = window.innerHeight * scaleFactor;
-GLOBAL.canvasWidth  = canvas.width  = window.innerWidth  * scaleFactor;
+  cacheCtx.drawImage(canvas, 0, 0)
 
-cacheCanvas.height = canvas.height;
-cacheCanvas.width  = canvas.width;
+  const centerX = Math.round(canvas.width / 2)
+  const centerY = Math.round(canvas.height / 2)
+  const distanceX = -(centerX - (point.x * tileSize))
+  const distanceY = -(centerY - (point.y * tileSize))
+  const velocityX = distanceX / time
+  const velocityY = distanceY / time
+  const zoomSpeed = Math.abs(toSize - curZoom) / time
 
-let curZoom = 1;
-let curTranslate = { x: 0, y: 0 };
-let desiredZoom;
-let velocity = { x: 0, y: 0 };
+  function frame () {
+    if (curZoom >= desiredZoom) {
+      curZoom = desiredZoom
+      return
+    }
 
-export function zoomToPoint(point, toSize, time, easingName) {
-  desiredZoom = toSize;
-  console.log(point.x, point.y)
-
-  cacheCtx.drawImage(canvas, 0, 0);
-
-  const easing = Easing[easingName];
-  const center = { 
-    x: Math.round(canvas.width/2), 
-    y: Math.round(canvas.height/2) 
-  };
-  const distance = {
-    x: -(center.x - (point.x*tileSize)),
-    y: -(center.y - (point.y*tileSize))
-  };
-  let velocity = {
-    x: distance.x / time,
-    y: distance.y / time
-  };
-  let zoomSpeed = Math.abs(toSize - curZoom) / time;
-
-  function frame() {
-    if (curZoom >= desiredZoom) { curZoom = desiredZoom; return; }
-
-    velocity.x = velocity.x;
-    velocity.y = velocity.y;
-    zoomSpeed  = zoomSpeed;
-
-    curZoom += zoomSpeed;
-    curTranslate.x += (velocity.x / curZoom);
-    curTranslate.y += (velocity.y / curZoom);
+    curZoom += zoomSpeed
+    curTranslateX += (velocityX / curZoom)
+    curTranslateY += (velocityY / curZoom)
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    ctx.save();
-    ctx.scale(curZoom, curZoom);
-    ctx.translate(center.x + curTranslate.x, center.y + curTranslate.y);
-    ctx.drawImage(cacheCanvas, -center.x, -center.y);
-    ctx.restore();
+    ctx.save()
+    ctx.scale(curZoom, curZoom)
+    ctx.translate(centerX + curTranslateX, centerY + curTranslateY)
+    ctx.drawImage(cacheCanvas, -centerX, -centerY)
+    ctx.restore()
 
-    window.requestAnimationFrame(frame);
+    window.requestAnimationFrame(frame)
   }
 
-  window.requestAnimationFrame(frame);
+  window.requestAnimationFrame(frame)
+}
+
+module.exports = {
+  canvas,
+  ctx,
+  zoomToPoint
 }

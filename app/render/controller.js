@@ -1,60 +1,60 @@
-import GLOBAL      from 'utils/global';
-import {subscribe} from 'utils/mediator';
+const config = require('../utils/global')
+const { subscribe } = require('../utils/mediator')
+const { events } = require('../utils/enums')
+const Bips = require('../bip/controller')
+const Enemies = require('../enemy/controller')
+const Friends = require('../friend/controller')
+const Particles = require('../particle/controller')
+const Levels = require('../level/controller')
+const {canvas, ctx} = require('../canvas/controller')
+const {cacheCtx, cacheCanvas} = require('../cacheCanvas/controller')
 
-import Bips      from 'bip/controller';
-import Enemies   from 'enemy/controller';
-import Friends   from 'friend/controller';
-import Particles from 'particle/controller';
-import Levels    from 'level/controller';
+let frameId = 0
+let lastTime = 0
 
-import {ctx}                   from 'canvas/controller';
-import {cacheCtx, cacheCanvas} from 'cacheCanvas/controller';
+subscribe(events.PAUSE, pause)
+subscribe(events.RESUME, resume)
 
-let frameId  = 0;
-let lastTime = 0;
+function preShake () {
+  ctx.save()
 
-subscribe('GLOBAL::pause', pause);
-subscribe('GLOBAL::resume', resume);
+  ctx.translate(
+    Math.random() * config.SHAKE_MAGNITUDE,
+    Math.random() * config.SHAKE_MAGNITUDE
+  )
 
-function preShake() {
-  ctx.save();
-  var dx = Math.random() * GLOBAL.shakeLevel;
-  var dy = Math.random() * GLOBAL.shakeLevel;
-  ctx.translate(dx, dy);  
-
-  GLOBAL.shakeLevel = GLOBAL.shakeLevel - 0.5;
+  config.SHAKE_MAGNITUDE -= 0.5
 }
 
-function postShake() {
-  ctx.restore();
+function postShake () {
+  ctx.restore()
 }
 
-function frame(timeStamp) {
-  const delta = lastTime - timeStamp;
-  lastTime = timeStamp;
+function frame (timeStamp) {
+  const delta = lastTime - timeStamp
+  lastTime = timeStamp
 
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-  if (GLOBAL.shakeLevel) preShake();
+  if (config.SHAKE_MAGNITUDE > 0) preShake()
 
-  ctx.drawImage(cacheCanvas, 0, 0);
+  ctx.drawImage(cacheCanvas, 0, 0)
 
-  Bips.render(ctx, delta);
-  Enemies.render(ctx, delta);
-  Friends.render(ctx, delta);
-  Particles.render(ctx, delta);
+  Bips.render(ctx, delta)
+  Enemies.render(ctx, delta)
+  Friends.render(ctx, delta)
+  Particles.render(ctx, delta)
 
-  if (GLOBAL.shakeLevel) postShake();
+  if (config.SHAKE_MAGNITUDE > 0) postShake()
 
-  frameId = window.requestAnimationFrame(frame);
+  frameId = window.requestAnimationFrame(frame)
 }
 
-function resume() {
-  Levels.renderGrid(cacheCtx);
-  frameId = window.requestAnimationFrame(frame);
+function resume () {
+  Levels.renderGrid(cacheCtx)
+  frameId = window.requestAnimationFrame(frame)
 }
 
-function pause() {
-  window.cancelAnimationFrame(frameId);
+function pause () {
+  window.cancelAnimationFrame(frameId)
 }
-

@@ -2,7 +2,7 @@
 
 -- Question --
 
-Have you ever been introduced to the fundamental physical laws of 
+Have you ever been introduced to the fundamental physical laws of
 our universe?
 
 - Yes
@@ -30,17 +30,13 @@ This may be harder than I thought.
 So, it may be... less likely that you have also witnessed the other of our most
 fundamental set of laws. From Descartes himself:
 
-"A stationary body, 
-when struck by a body in motion -- 
-given this moving body is constituted of pure evil -- 
-will instantaneously explode in an 
+"A stationary body,
+when struck by a body in motion --
+given this moving body is constituted of pure evil --
+will instantaneously explode in an
 awesome fireball from which no matter remains.
 
 The body in motion will explode in the fireball as well.""
-
-
-
-
 
 I will find that the fundamental physical laws of this universe
 are
@@ -53,16 +49,15 @@ My name is Professor. People call me Doctor Professor...
 
 because I have a PhD.
 
-Doubtless you have learned by now that this world is inhabited by 
+Doubtless you have learned by now that this world is inhabited by
 creatures call morons.
 
 -------------------------------------
 
-With my brains and your, er, willingness to mercilessly 
+With my brains and your, er, willingness to mercilessly
 slaughter anyone without thought, we're practically unstoppable!
 
 What do you say Bip?
-
 
 --------------------------------------
 
@@ -75,13 +70,13 @@ It's called the Rhomicuboctohedron, and it's where we will find God.
 
 Well... in the way Einstein meant it.
 
-At least that's what conjecture supports. 
+At least that's what conjecture supports.
 
 Anyway. We're going there. To check it out.
 
 ...
 
-Just be grateful we don't have to go to the Rhombicosidodecahedron. 
+Just be grateful we don't have to go to the Rhombicosidodecahedron. Oh man is that a bad place!
 
 */
 

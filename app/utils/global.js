@@ -1,42 +1,33 @@
-import {subscribe} from 'utils/mediator';
+const { subscribe } = require('./mediator')
+const { events } = require('./enums')
 
-class Global {
-  constructor() {
-    // MUTABLE STATES
-    this._isInGame   = false;
-    this._isImmobile = false;
-    this._canExit    = false;
+const config = {
+  IS_PAUSED: true,
+  IS_PLAYER_FROZEN: false,
+  IS_LEVEL_EXITABLE: false,
 
-    // PHYSICAL CONSTANTS
-    this.scaleFactor = window.devicePixelRatio || 1;
-    this.tileSize    = 25 * this.scaleFactor;
+  SCALE: window.devicePixelRatio || 1,
+  TILE_SIZE: (window.devicePixelRatio || 1) * 25,
 
-    this._canvas = { width: null, height: null };
+  CANVAS_WIDTH: null,
+  CANVAS_HEIGHT: null,
 
-    this._shakeLevel = 0;
-
-    subscribe('GLOBAL::pause',    () => { this._isInGame = false;   });
-    subscribe('GLOBAL::resume',   () => { this._isInGame = true;    });
-    subscribe('GLOBAL::immobile', () => { this._isImmobile = true;  });
-    subscribe('GLOBAL::mobile',   () => { this._isImmobile = false; });
-  }
-
-  get isInGame()     { return this._isInGame; }
-  get isImmobile()   { return this._isImmobile; }
-  get canExit()      { return this._canExit; }
-
-  get canvasHeight() { return this._canvas.height; }
-  get canvasWidth()  { return this._canvas.width; }
-  get shakeLevel()   { return this._shakeLevel; }
-
-  set canExit(x)      { this._canExit = x; }
-
-  set canvasHeight(x) { this._canvas.height = x; }
-  set canvasWidth(x)  { this._canvas.width  = x; }
-
-  set shakeLevel(x)   { this._shakeLevel = x; }
-
-
+  SHAKE_MAGNITUDE: 0
 }
 
-export default new Global();
+subscribe(events.PAUSE, function () {
+  config.IS_PAUSED = true
+})
+
+subscribe(events.RESUME, function () {
+  config.IS_PAUSED = false
+})
+subscribe(events.PLAYER_FROZEN, function () {
+  this.IS_PLAYER_FROZEN = true
+})
+
+subscribe(events.PLAYER_UNFROZEN, function () {
+  this.IS_PLAYER_FROZEN = false
+})
+
+module.exports = config

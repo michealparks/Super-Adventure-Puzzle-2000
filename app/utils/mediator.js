@@ -1,38 +1,31 @@
-import {spliceArray} from 'utils/core';
+const { spliceArray } = require('./core')
+const { events } = require('./enums')
+const channels = []
 
-let channels = new Map();
-let idProvider = 0;
-
-export function publish (name, data) {
-  let channel = channels.get(name);
-  
-  if (! channel) return;
-
-  for (let i = 0, il = channel.length; i < il; i++) {
-    channel[i](data);
-  }
-} 
-
-export function subscribe (name, func) {
-  func.id = ++idProvider;
-  if (! channels.has(name)) channels.set(name, []);
-  channels.get(name).push(func);
-  return idProvider;
+for (let i = 0, l = Object.keys(events).length; i < l; ++i) {
+  channels.push([])
 }
 
-export function unsubscribe (name, id) {
-  let channel = channels.get(name);
-  let result = false;
+function publish (index, data) {
+  const channel = channels[index] || []
 
-  if (! channel) throw new Error('No channel to unsubscribe from.');
-
-  for (let i = 0, il = channel.length; i < il; i++) {
-    if (channel[i].id === id) {
-      spliceArray(channel, i);
-      result = true;
-      break;
-    }
+  for (let i = 0, l = channel.length; i < l; ++i) {
+    channel[i](data)
   }
+}
 
-  if (! result) throw new Error('No listener was unsubscribed.')
+function subscribe (index, fn) {
+  channels[index].push(fn)
+
+  return channels[index].length - 1
+}
+
+function unsubscribe (index, id) {
+  spliceArray(channels[index], id)
+}
+
+module.exports = {
+  publish,
+  subscribe,
+  unsubscribe
 }

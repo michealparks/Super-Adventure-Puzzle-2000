@@ -1,27 +1,27 @@
-import Level            from 'level/model';
-import GeneratedTerrain from 'level/levels/generator';
+const GeneratedTerrain = require('../generator')
 
-let config = {};
+let config = {}
 
-config.levelName = '';
+config.levelName = ''
 
-config.canExit = false;
+config.canExit = false
 
-config.position = {x: 0, y: 0};
-config.width  = 15;
-config.height = 24;
+config.position = {x: 0, y: 0}
+config.width = 15
+config.height = 24
 
 config.gridData = new GeneratedTerrain(
-  config.width, 
-  config.height, 
-  config.position);
+  config.width,
+  config.height,
+  config.position
+)
 
-config.colorKey = [];
+config.colorKey = []
 
-config.colorKey[0] = '#333333'; // Ground
-config.colorKey[1] = '#262626'; // Entrance
-config.colorKey[2] = '#222222'; // Exit
-config.colorKey[3] = '#555555'; // Wall
+config.colorKey[0] = '#333333' // Ground
+config.colorKey[1] = '#262626' // Entrance
+config.colorKey[2] = '#222222' // Exit
+config.colorKey[3] = '#555555' // Wall
 
-export default config;
+module.exports = config
 

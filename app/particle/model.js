@@ -1,37 +1,38 @@
-import GLOBAL from 'utils/global';
+const config = require('../utils/global')
 
-const tileSize = GLOBAL.tileSize;
-
-export default class Particle {
-  constructor(x, y, c, r, ss, vx, vy) {
-    this.x = x;
-    this.y = y;
-    this.color = c;
-    this.radius = r;
-    this.scaleSpeed = ss;
-    this.velocityX = vx;
-    this.velocityY = vy;
-    this.scale = 1.0;
-    this.frameDelay = 1000.0/60;
+class Particle {
+  constructor (x, y, c, r, ss, vx, vy) {
+    this.x = x
+    this.y = y
+    this.color = c
+    this.radius = r
+    this.scaleSpeed = ss
+    this.velocityX = vx
+    this.velocityY = vy
+    this.scale = 1.0
+    this.frameDelay = 1000.0 / 60
+    this.tileSize = config.TILE_SIZE
   }
 
-  update() {
-    this.scale -= this.scaleSpeed * this.frameDelay / 1000.0;
+  update () {
+    this.scale -= this.scaleSpeed * this.frameDelay / 1000.0
 
-    if (this.scale <= 0) return false;
+    if (this.scale <= 0) return false
 
-    this.x += this.velocityX * this.frameDelay / 1000.0;
-    this.y += this.velocityY * this.frameDelay / 1000.0;
+    this.x += this.velocityX * this.frameDelay / 1000.0
+    this.y += this.velocityY * this.frameDelay / 1000.0
 
-    return true;
+    return true
   }
 
-  render(ctx) {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.scale(this.scale, this.scale);
-    ctx.fillStyle = this.color;
-    ctx.fillRect(-tileSize/2, -tileSize/2, this.radius*2, this.radius*2);
-    ctx.restore();
+  render (ctx) {
+    ctx.save()
+    ctx.translate(this.x, this.y)
+    ctx.scale(this.scale, this.scale)
+    ctx.fillStyle = this.color
+    ctx.fillRect(-this.tileSize / 2, -this.tileSize / 2, this.radius * 2, this.radius * 2)
+    ctx.restore()
   }
 }
+
+module.exports = Particle

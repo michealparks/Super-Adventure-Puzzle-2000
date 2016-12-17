@@ -1,7 +1,11 @@
-import {canvas} from 'canvas/controller';
+const { canvas } = require('../canvas/controller')
+const cacheCanvas = document.createElement('canvas')
+const cacheCtx = cacheCanvas.getContext('2d')
 
-export const cacheCanvas = document.createElement('canvas');
-export const cacheCtx = cacheCanvas.getContext('2d');
+cacheCanvas.height = canvas.height
+cacheCanvas.width = canvas.width
 
-cacheCanvas.height = canvas.height;
-cacheCanvas.width  = canvas.width;
+module.exports = {
+  cacheCanvas,
+  cacheCtx
+}

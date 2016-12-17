@@ -19,16 +19,6 @@ var jade = require('gulp-jade');
 var webserver = require('gulp-webserver');
 
 gulp.task('main', function () {
-  gulp.src(['app/**/*.js'])
-    .pipe(babel({loose: 'all', modules: 'amd', moduleIds: true}))
-      .on('error', function (e) {
-        console.error(e.message);
-        this.emit('end');
-      })
-    .pipe(addsrc.prepend('lib/**/*.js'))
-    .pipe(concat('script.js'))
-    .pipe(gulp.dest('build'));
-
   gulp.src(['app/**/!(variables)*.styl'])
     .pipe(addsrc.prepend('app/variables.styl'))
     .pipe(stylus({use: nib(), compress: true}))

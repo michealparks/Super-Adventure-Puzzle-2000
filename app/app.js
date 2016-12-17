@@ -1,11 +1,11 @@
-import {publish} from 'utils/mediator';
-import Levels    from 'level/controller';
 
-import 'render/controller';
-import 'bip/controller';
-import 'user_input/controller';
-import 'level/events/model';
+const Levels = require('./level/controller')
 
-import 'collision/model';
+require('./render/controller')
+require('./bip/controller')
+require('./user_input/controller')
+require('./level/events/model')
 
-Levels.load('level_1');
+require('./collision/model')
+
+Levels.load('level_1')

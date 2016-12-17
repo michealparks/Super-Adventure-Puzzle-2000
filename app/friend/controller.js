@@ -1,21 +1,19 @@
-import BeingsArray from 'square_being/controller';
+const BeingsArray = require('../square_being/controller')
 
 class Friends extends BeingsArray {
-  constructor() {
-    super();
-  }
+  render (ctx) {
+    for (let f, i = 0, il = this._array.length; i < il; i++) {
+      f = this._array[i]
 
-  render(ctx) {
-    for (let i = 0, il = this._array.length, friend; friend = this._array[i], i < il; i++) {
-      if (! friend.isOnPath && friend.hasPaths) {
-        friend.direction = friend.pathList.pop();
-        friend.hasPaths = friend.pathList.length > 0;
-        friend.makeMovement();
+      if (!f.isOnPath && f.hasPaths) {
+        f.direction = f.pathList.pop()
+        f.hasPaths = f.pathList.length > 0
+        f.makeMovement()
       }
 
-      friend.render(ctx);
+      f.render(ctx)
     }
   }
 }
 
-export default new Friends();
+module.exports = new Friends()

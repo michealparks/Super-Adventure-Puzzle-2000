@@ -1,5 +1,9 @@
 {
   "name": "super-adventure-puzzle-2000",
+  "scripts": {
+    "dev": "gulp",
+    "webpack": "webpack --watch"
+  },
   "dependencies": {
     "gulp": "*",
     "gulp-babel": "*",
@@ -10,5 +14,12 @@
     "nib": "*",
     "gulp-jade": "*",
     "gulp-webserver": "*"
+  },
+  "devDependencies": {
+    "babel-loader": "^6.2.10",
+    "babili-webpack-plugin": "0.0.7",
+    "google-closure-compiler-js": "^20161201.0.0",
+    "webpack": "^1.14.0",
+    "webpack-validator": "^2.3.0"
   }
 }

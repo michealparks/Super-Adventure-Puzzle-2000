@@ -1,19 +1,17 @@
-import BeingsArray from 'square_being/controller';
+const BeingsArray = require('../square_being/controller')
 
 class Bips extends BeingsArray {
-  constructor() {
-    super();
-  }
+  render (ctx) {
+    for (let b, i = 0, l = this._array.length; i < l; i++) {
+      b = this._array[i]
 
-  render(ctx) {
-    for (let i = 0, bip; bip = this._array[i]; i++) {
-      bip.render(ctx);
+      b.render(ctx)
 
-      if (bip.shield.level < 1) {
-        bip.renderShieldChange();
-      }
+      if (b.shield.level === 1) return
+
+      b.renderShieldChange()
     }
   }
 }
 
-export default new Bips();
+module.exports = new Bips()

@@ -1,11 +1,12 @@
-@import 'nib'
-
 #canvas
-  absolute top left
-  size 100% 100%
-  transform scale(1)
-  transition opacity 300ms
-  transition-timing-function steps(4, end)
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  transform: scale(1)
+  transition: opacity 300ms
+  transition-timing-function: steps(4, end)
 
-  &.faded
-    opacity 0
+#canvas.faded
+  opacity: 0
