@@ -1,15 +1,15 @@
 const { subscribe } = require('../utils/mediator')
 const { events } = require('../utils/enums')
 const config = require('../utils/global')
-const { ctx } = require('../canvas/controller')
 const SquareBeing = require('../square_being/model')
+const { createExplosion } = require('../particle/controller')
 
-class Bip extends SquareBeing {
+class Player extends SquareBeing {
   constructor (x, y, v) {
     super(x, y, v)
-    this.type = 'bip'
+    this.type = 'player'
     this.image = new window.Image()
-    this.image.src = 'img/bip.png'
+    this.image.src = 'img/player.png'
     this.fill = '#ffffff'
     this.isEntering = true
 
@@ -20,7 +20,6 @@ class Bip extends SquareBeing {
     this.isTakingDamage = false
     this.shouldFadeOut = false
     this.shouldFadeIn = false
-    this.isVisible = false
 
     this.switchFadeOut = this.switchFadeOut.bind(this)
     this.startHealing = this.startHealing.bind(this)
@@ -34,9 +33,10 @@ class Bip extends SquareBeing {
   }
 
   fadeOutShield () {
-    if (this.shieldAlpha >= 0) {
+    if (this.shieldAlpha > 0) {
       this.shieldAlpha -= 0.01
     } else {
+      this.shieldAlpha = 0
       this.shouldFadeOut = false
     }
   }
@@ -45,6 +45,7 @@ class Bip extends SquareBeing {
     if (this.shieldAlpha < 1) {
       this.shieldAlpha += 0.05
     } else {
+      this.shieldAlpha = 1
       this.shouldFadeIn = false
     }
   }
@@ -65,11 +66,11 @@ class Bip extends SquareBeing {
     clearTimeout(this.shieldRegenTimerId)
   }
 
-  renderShieldChange () {
+  renderShield (ctx) {
     if (this.shouldFadeOut) this.fadeOutShield()
     if (this.shouldFadeIn) this.fadeInShield()
 
-    if (this.isVisible && this.shieldLevel === 1) {
+    if (this.shieldAlpha === 1 && this.animLevel === 1) {
       this.isTakingDamage = false
       setTimeout(this.switchFadeOut, 500)
     }
@@ -84,6 +85,8 @@ class Bip extends SquareBeing {
       this.isTakingDamage = false
       this.shieldRegenTimerId = setTimeout(this.startHealing, 500)
     }
+
+    console.log(this.animLevel)
 
     ctx.fillStyle = `rgba(241, 196, 15, ${this.shieldAlpha})`
     ctx.fillRect(0, 0, this.CANVAS_WIDTH * this.animLevel, 10)
@@ -100,8 +103,29 @@ class Bip extends SquareBeing {
     this.shieldLevel = x
     this.shieldLevelDiff = x < this.animLevel ? -0.02 : 0.02
   }
+
+  setLocation (x, y) {
+    this.x = x
+    this.y = y
+  }
+
+  explode () {
+    createExplosion(
+      (this.x * this.TILE_SIZE) + this.CENTER_OFFSET,
+      (this.y * this.TILE_SIZE) + this.CENTER_OFFSET,
+      this.fill,
+      30
+    )
+  }
+
+  render (ctx) {
+    super.render(ctx)
+    this.renderShield(ctx)
+  }
 }
 
-Bip.prototype.CANVAS_WIDTH = config.CANVAS_WIDTH
+Player.prototype.TILE_SIZE = config.TILE_SIZE
+Player.prototype.CENTER_OFFSET = config.TILE_SIZE / 2
+Player.prototype.CANVAS_WIDTH = config.CANVAS_WIDTH
 
-module.exports = Bip
+module.exports = Player

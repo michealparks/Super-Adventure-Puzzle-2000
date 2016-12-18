@@ -21,7 +21,7 @@ exits.set('4,0', {
   y: 0,
   dir: { x: 0, y: 1 },
   leadsTo: {
-    level: 'level_2',
+    level: 1,
     entrance: 0
   }
 })
@@ -30,12 +30,12 @@ exits.set('8,8', {
   y: 8,
   dir: { x: -1, y: 0 },
   leadsTo: {
-    level: 'level_3',
+    level: 2,
     entrance: 0
   }
 })
 
-config.gridData = ((width, height) => {
+config.gridData = (function (width, height) {
   let grid = []
   for (let i = 0; i < width; i++) {
     grid.push(new Int8Array(height))

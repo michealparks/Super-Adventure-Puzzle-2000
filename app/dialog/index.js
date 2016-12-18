@@ -2,13 +2,13 @@ const { publish } = require('../utils/mediator')
 const { events } = require('../utils/enums')
 const Effects = require('../sound/effects')
 const { ptrup } = require('../utils/device')
-const { zoomToPoint } = require('../canvas/controller')
-const Bips = require('../bip/controller')
+const { zoomToPoint } = require('../canvas')
+const Player = require('../player')
 
-const topDiv = document.querySelector('.dialog')
-const textDiv = topDiv.firstChild
-const nextBtn = topDiv.children[1]
-const choiceDiv = topDiv.lastChild
+const container = document.querySelector('.dialog')
+const textDiv = container.children[0]
+const nextBtn = container.children[1]
+const choiceDiv = container.children[2]
 
 let speed = 25
 let done
@@ -16,12 +16,12 @@ let iterator = 0
 let dialog
 let currentDialog
 
-choiceDiv.firstChild.addEventListener(ptrup, function () {
+choiceDiv.children[0].addEventListener(ptrup, function () {
   currentDialog.type = 'statement'
   typeText(currentDialog.response[1])
 })
 
-choiceDiv.lastChild.addEventListener(ptrup, function () {
+choiceDiv.children[1].addEventListener(ptrup, function () {
   currentDialog.type = 'statement'
   typeText(currentDialog.response[0])
 })
@@ -34,11 +34,11 @@ function show (newDialog, callback) {
   dialog = newDialog
   done = callback
   iterator = 0
-  topDiv.classList.add('active')
+  container.classList.add('active')
 
   publish(events.PAUSE)
   // zoomToPoint(
-  //   /* coord */ Bips.array[0],
+  //   /* coord */ Player,
   //   /* zoom */ 2,
   //   /* time */ 20,
   //   /* ease */ 'easeInOutQuart'
@@ -47,15 +47,13 @@ function show (newDialog, callback) {
 }
 
 function next () {
-  if (step()) {
-    remove()
-  }
+  if (step()) remove()
 }
 
 function step () {
   currentDialog = dialog[iterator++]
 
-  if (currentDialog === undefined) return true
+  if (!currentDialog) return true
 
   typeText(currentDialog.text)
   return false
@@ -75,7 +73,7 @@ function typeText (text, done) {
 
     Effects.play('talk.wav')
     textDiv.innerHTML += text.charAt(i++)
-    window.setTimeout(typeLetter, speed)
+    setTimeout(typeLetter, speed)
   }
 
   typeLetter()
@@ -90,7 +88,7 @@ function onTypeTextDone () {
 }
 
 function remove () {
-  topDiv.classList.remove('active')
+  container.classList.remove('active')
 
   publish(events.RESUME)
   done()

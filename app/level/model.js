@@ -3,7 +3,7 @@ const { events } = require('../utils/enums')
 const { subscribe, unsubscribe } = require('../utils/mediator')
 const { spliceArray } = require('../utils/core')
 
-const LevelTitle = require('../level-title/model')
+const LevelTitle = require('../level-title')
 
 class Level {
   constructor (config, events) {

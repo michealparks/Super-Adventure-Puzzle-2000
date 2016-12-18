@@ -21,9 +21,9 @@ class SquareBeing {
     subscribe(events.LOAD_LEVEL, this.onLevelLoad.bind(this))
   }
 
-  set direction (loc) {
-    this.dx = loc[0]
-    this.dy = loc[1]
+  setDirection (dx, dy) {
+    this.dx = dx
+    this.dy = dy
   }
 
   onLevelLoad (level) {

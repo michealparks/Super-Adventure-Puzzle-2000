@@ -1,4 +1,3 @@
-
 <html>
 <head>
 <meta charset="utf-8" />
@@ -15,15 +14,24 @@
 </head>
 
 <body>
-  canvas(id="canvas")
-  canvas(id="item-canvas")
-  include menu/index
-  include toolbar/index
-  include level-title/index
-  include dialog/index
-
-<script async src='index' />
-
+  <canvas id="canvas"></canvas>
+  <canvas id="item-canvas"></canvas>
+  <div id="menu"></div>
+  <div id="level-title">
+    <div id="background"></div>
+    <div id="text">
+      <span>T</span>he <span>C</span>ramped <span>C</span>ave of <span>C</span>onfusion
+    </div>
+  </div>
+  <div class="dialog">
+    <div class="dialog__text"></div>
+    <div class="dialog__next">-></div>
+    <div class="dialog__choice">
+      <div class="choice__yes">Yes</div>
+      <div class="choice__no">No</div>
+    </div>
+  </div>
 </body>
 
+<script async src='index.js'></script>
 </html>

@@ -1,53 +1,53 @@
 const { spliceArray } = require('../utils/core')
+const config = require('../utils/global')
 const Particle = require('./model')
 
-class Particles {
-  constructor () {
-    this.array = []
-    this.minRadius = 10
-    this.maxRadius = 40
-    this.count = 10
-    this.minSpeed = 100.0
-    this.maxSpeed = 300.0
-    this.minScaleSpeed = 1.0
-    this.maxScaleSpeed = 4.0
+const array = []
+const minRadius = 10
+const maxRadius = 40
+const count = 10
+const minSpeed = 100.0
+const maxSpeed = 300.0
+const minScaleSpeed = 1.0
+const maxScaleSpeed = 4.0
 
-    this.createExplosion = this.createExplosion.bind(this)
+function randomFloat (min, max) {
+  return min + Math.random() * (max - min)
+}
+
+function createExplosion (x, y, color, shake) {
+  config.SHAKE_MAGNITUDE = shake || 0
+
+  for (let angle = 0, speed; angle < 360; angle += Math.round(360 / count)) {
+    speed = randomFloat(minSpeed, maxSpeed)
+
+    array.push(new Particle(
+      x,
+      y,
+      color,
+      randomFloat(minRadius, maxRadius),
+      randomFloat(minScaleSpeed, maxScaleSpeed),
+      speed * Math.cos(angle * Math.PI / 180.0),
+      speed * Math.sin(angle * Math.PI / 180.0)
+    ))
   }
+}
 
-  randomFloat (min, max) {
-    return min + Math.random() * (max - min)
-  }
-
-  createExplosion (x, y, color) {
-    for (let angle = 0, speed; angle < 360; angle += Math.round(360 / this.count)) {
-      speed = this.randomFloat(this.minSpeed, this.maxSpeed)
-
-      this.array.push(new Particle(
-        x,
-        y,
-        color,
-        this.randomFloat(this.minRadius, this.maxRadius),
-        this.randomFloat(this.minScaleSpeed, this.maxScaleSpeed),
-        speed * Math.cos(angle * Math.PI / 180.0),
-        speed * Math.sin(angle * Math.PI / 180.0)
-      ))
-    }
-  }
-
-  render (ctx) {
-    // Reverse loop is necessary to prevent indexing issues
-    // since array is spliced during the loop.
-    let i = this.array.length
-    while (i-- > 0) {
-      let p = this.array[i]
-      if (p.update()) {
-        p.render(ctx)
-      } else {
-        spliceArray(this.array, i)
-      }
+function renderParticles (ctx) {
+  // Reverse loop is necessary to prevent indexing issues
+  // since array is spliced during the loop.
+  let i = array.length
+  while (i-- > 0) {
+    let particle = array[i]
+    if (particle.update()) {
+      particle.render(ctx)
+    } else {
+      spliceArray(array, i)
     }
   }
 }
 
-module.exports = new Particles()
+module.exports = {
+  createExplosion,
+  renderParticles
+}

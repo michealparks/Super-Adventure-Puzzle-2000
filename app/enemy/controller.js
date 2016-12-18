@@ -2,15 +2,16 @@ const BeingsArray = require('../square_being/controller')
 
 class Enemies extends BeingsArray {
   render (ctx) {
-    for (let e, i = 0, l = this._array.length; i < l; i++) {
-      e = this._array[i]
+    for (let e, p, i = 0, l = this.array.length; i < l; i++) {
+      e = this.array[i]
 
       if (!e.hasPaths) {
         e.createSimpleRandomPath()
       }
 
       if (!e.isOnPath && e.hasPaths) {
-        e.direction = e.pathList.pop()
+        p = e.pathList.pop()
+        e.setDirection(p[0], p[1])
         e.hasPaths = e.pathList.length > 0
         e.makeMovement()
       }

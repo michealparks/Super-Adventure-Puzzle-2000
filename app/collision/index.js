@@ -1,6 +1,6 @@
 const { publish, subscribe } = require('../utils/mediator')
 const { events } = require('../utils/enums')
-const Bips = require('../bip/controller')
+const Player = require('../player')
 const Enemies = require('../enemy/controller')
 const Effects = require('../sound/effects')
 
@@ -20,35 +20,31 @@ subscribe(events.LOAD_LEVEL, function (level) {
 function seekCollisions () {
   // Reverse loops are necessary to prevent indexing issues
   // since array is spliced during the loop.
-  let b = Bips.array
   let e = Enemies.array
-  let i = b.length
-  let bip, enemy, j
+  let i = e.length
+  let enemy
+
+  if (detectWallCollision('player', Player.x, Player.y, Player.dx, Player.dy, grid)) {
+    Player.stopMovement()
+    Effects.play('hit.wav')
+  }
 
   while (i-- > 0) {
-    bip = b[i]
+    enemy = e[i]
 
-    if (detectWallCollision('bip', bip.x, bip.y, bip.dx, bip.dy, grid)) {
-      bip.stopMovement()
-      Effects.play('hit.wav')
+    if (detectWallCollision('enemy', enemy.x, enemy.y, enemy.dx, enemy.dy, grid)) {
+      enemy.stopMovement()
     }
 
-    j = e.length
-    while (j-- > 0) {
-      enemy = e[j]
+    if (detectEnemyCollision(Player.x, Player.y, enemy.x, enemy.y)) {
+      Player.changeShieldLevel(Math.round((Player.shieldLevel - 0.10) * 100) / 100)
 
-      if (detectWallCollision('enemy', enemy.x, enemy.y, enemy.dx, enemy.dy, grid)) {
-        enemy.stopMovement()
+      if (Player.shieldLevel === 0) {
+        Player.explode()
       }
 
-      if (detectEnemyCollision(bip.x, bip.y, enemy.x, enemy.y)) {
-        bip.changeShieldLevel(Math.round((bip.shieldLevel - 0.10) * 100) / 100)
-        if (bip.shieldLevel === 0) {
-          Bips.explode(i)
-        }
-        Enemies.explode(j)
-        Effects.play('explosion.wav')
-      }
+      Enemies.explode(i)
+      Effects.play('explosion.wav')
     }
   }
 
@@ -60,7 +56,7 @@ function detectWallCollision (type, x, y, dx, dy, grid) {
       Math.floor(x) !== x ||
       Math.floor(y) !== y) return false
 
-  if (type === 'bip') {
+  if (type === 'player') {
     publish(events.PLAYER_LOCATION, [x, y])
   }
 

@@ -57,12 +57,12 @@ creatures call morons.
 With my brains and your, er, willingness to mercilessly
 slaughter anyone without thought, we're practically unstoppable!
 
-What do you say Bip?
+What do you say?
 
 --------------------------------------
 
 There is a structure--a temple--that very few know about, and even
-fewer dare utter it's name...
+fewer dare utter its name...
 
 mostly because it's only mentioned in academic journals.
 

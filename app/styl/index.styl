@@ -9,6 +9,10 @@
 @font-face
   font-family: "Press Start 2P"
   src: url("fonts/pressstart2p-regular.woff")
+  
+*
+  user-select: none
+  cursor: default
 
 body
   position: absolute
@@ -19,3 +23,7 @@ body
   margin: 0
   background-color: #111
   overflow: hidden
+
+@import './canvas'
+@import './level-title'
+@import './dialog'

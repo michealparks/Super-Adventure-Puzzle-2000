@@ -1,11 +1,9 @@
 
-const Levels = require('./level/controller')
+const Levels = require('./level')
 
-require('./render/controller')
-require('./bip/controller')
-require('./user_input/controller')
-require('./level/events/model')
+require('./level/events')
+require('./render')
+require('./input')
+require('./collision')
 
-require('./collision/model')
-
-Levels.load('level_2')
+Levels.load(1)

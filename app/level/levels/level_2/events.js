@@ -1,11 +1,10 @@
 const config = require('./config')
 const { events } = require('../../../utils/enums')
 const { publish } = require('../../../utils/mediator')
-const Dialog = require('../../../dialog/model')
-const Bip = require('../../../bip/model')
+const Dialog = require('../../../dialog')
 const Enemy = require('../../../enemy/model')
 const Friend = require('../../../friend/model')
-const Bips = require('../../../bip/controller')
+const Player = require('../../../player')
 const Enemies = require('../../../enemy/controller')
 const Friends = require('../../../friend/controller')
 const Music = require('../../../sound/music')
@@ -19,7 +18,7 @@ module.exports = [
     requirements: {},
     execute (done) {
       const entrance = config.gridData.entrances.values().next().value
-      Bips.add(new Bip(entrance.x, entrance.y, 0.25))
+      Player.setLocation(entrance.x, entrance.y)
       done()
     }
   },
@@ -89,8 +88,11 @@ module.exports = [
     blocking: true,
     requirements: {},
     execute (done) {
-      Music.play('travel_1.mp3')
-      for (let i = 0; i < 30; i++) Enemies.add(new Enemy(0, 0, 0.125))
+      for (let i = 0; i < 40; i++) {
+        Enemies.add(new Enemy(0, 0, 0.125))
+      }
+
+      Music.play('travel_2.mp3')
       done()
     }
   }

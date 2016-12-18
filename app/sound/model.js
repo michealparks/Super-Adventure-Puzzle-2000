@@ -1,6 +1,6 @@
 class Sound {
   constructor (sounds, dir) {
-    this.dict = {}
+    this.sounds = {}
     this.dir = dir
 
     for (let i = 0, il = sounds.length; i < il; i++) {
@@ -16,11 +16,11 @@ class Sound {
     audio.loop = false
     audio.onerror = function (e) {}
 
-    this.dict[name] = audio
+    this.sounds[name] = audio
   }
 
   play (name) {
-    this.dict[name].play()
+    this.sounds[name].play()
   }
 }
 

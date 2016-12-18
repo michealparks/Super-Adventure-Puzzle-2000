@@ -1,13 +1,13 @@
 const config = require('../utils/global')
 const { subscribe } = require('../utils/mediator')
 const { events } = require('../utils/enums')
-const Bips = require('../bip/controller')
+const Player = require('../player')
 const Enemies = require('../enemy/controller')
 const Friends = require('../friend/controller')
-const Particles = require('../particle/controller')
-const Levels = require('../level/controller')
-const { canvas, ctx } = require('../canvas/controller')
-const { cacheCtx, cacheCanvas } = require('../cacheCanvas/controller')
+const { renderParticles } = require('../particle/controller')
+const Levels = require('../level')
+const { canvas, ctx } = require('../canvas')
+const { cacheCtx, cacheCanvas } = require('../cache-canvas')
 
 let frameId = 0
 let lastTime = 0
@@ -40,10 +40,10 @@ function frame (timeStamp) {
 
   ctx.drawImage(cacheCanvas, 0, 0)
 
-  Bips.render(ctx, delta)
   Enemies.render(ctx, delta)
   Friends.render(ctx, delta)
-  Particles.render(ctx, delta)
+  Player.render(ctx, delta)
+  renderParticles(ctx, delta)
 
   if (config.SHAKE_MAGNITUDE > 0) postShake()
 

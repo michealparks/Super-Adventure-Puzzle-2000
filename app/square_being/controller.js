@@ -1,51 +1,35 @@
 const config = require('../utils/global')
 const { createExplosion } = require('../particle/controller')
+const { spliceArray } = require('../utils/core')
 
 class BeingsArray {
   constructor () {
-    this._array = []
-    this._current = null
-    this.centerOffset = config.TILE_SIZE / 2
-    this.tileSize = config.TILE_SIZE
+    this.array = []
   }
 
-  get array () {
-    return this._array
-  }
-  get current () {
-    return this._current
-  }
-
-  get locations () {
-    const l = this._array.length
-    let locationsX = new Uint8Array(new ArrayBuffer(l))
-    let locationsY = new Uint8Array(new ArrayBuffer(l))
-    for (let i = 0; i < l; i++) {
-      locationsX[i] = this._array[i].x
-      locationsY[i] = this._array[i].y
-    }
-    return [locationsX, locationsY]
-  }
-
-  add (being) {
-    this._array.push(being)
-    this._current = being
+  add (actor) {
+    this.array.push(actor)
   }
 
   delete (i) {
-    return this._array.splice(i, 1)[0]
+    return spliceArray(this.array, i)
   }
 
   explode (i) {
-    const deleted = this.delete(i)
-
-    config.SHAKE_MAGNITUDE = 15
+    const deleted = this.array[i]
 
     createExplosion(
-      (deleted.x * this.tileSize) + this.centerOffset,
-      (deleted.y * this.tileSize) + this.centerOffset,
-      deleted.fill)
+      (deleted.x * this.TILE_SIZE) + this.CENTER_OFFSET,
+      (deleted.y * this.TILE_SIZE) + this.CENTER_OFFSET,
+      deleted.fill,
+      15
+    )
+
+    this.delete(i)
   }
 }
+
+BeingsArray.prototype.TILE_SIZE = config.TILE_SIZE
+BeingsArray.prototype.CENTER_OFFSET = config.TILE_SIZE / 2
 
 module.exports = BeingsArray

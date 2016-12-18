@@ -1,10 +1,9 @@
 const config = require('./config')
 const { events } = require('../../../utils/enums')
 const { publish } = require('../../../utils/mediator')
-const Dialog = require('../../../dialog/model')
-const Bip = require('../../../bip/model')
+const Dialog = require('../../../dialog')
 const Enemy = require('../../../enemy/model')
-const Bips = require('../../../bip/controller')
+const Player = require('../../../player')
 const Enemies = require('../../../enemy/controller')
 
 module.exports = [
@@ -14,10 +13,10 @@ module.exports = [
   {
     blocking: true,
     requirements: {},
-    execute (done) {
+    execute (next) {
       const entrance = config.gridData.entrances.get('2,0')
-      Bips.add(new Bip(entrance.x, entrance.y, 0.25))
-      done()
+      Player.setLocation(entrance.x, entrance.y)
+      next()
     }
   },
 
@@ -27,7 +26,7 @@ module.exports = [
   {
     blocking: true,
     requirements: {},
-    execute (done) {
+    execute (next) {
       for (let i = 0; i < 6; i++) {
         Enemies.add(new Enemy(0, 0, 0.125))
       }
@@ -36,7 +35,7 @@ module.exports = [
         if (Enemies.array.length > 0) {
           window.setTimeout(checkForEnemies, 400)
         } else {
-          done()
+          next()
         }
       }
 
@@ -50,7 +49,7 @@ module.exports = [
   {
     blocking: true,
     requirements: {},
-    execute (done) {
+    execute (next) {
       publish(events.PLAYER_FROZEN)
       // Friends.add(new Friend(3, 2, 0.5));
 
@@ -72,7 +71,7 @@ module.exports = [
           type: 'statement',
           text: 'Good luck!'
         }
-      ], done)
+      ], next)
     }
   }
 ]
